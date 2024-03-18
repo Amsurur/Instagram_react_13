@@ -29,9 +29,11 @@ import ReelsIcon from "../icons/Layout/ReelsIcon";
 import MessageIcon from "../icons/Layout/MessageIcon";
 import { getToken } from "../utils/token";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import SearchUser from "../components/SearchUser";
 
 export const Layout = () => {
   // Функция для модального окна "Еще"
+  const [modal,setSearchModal]=useState(false)
 
   const location = useLocation();
   const dispatch = useDispatch();
@@ -115,7 +117,7 @@ export const Layout = () => {
             </NavLink>
 
             {/* <search/> */}
-            <li className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
+            <li  onClick={()=>setSearchModal(true)} className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
               <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 className="text-[22px]"
