@@ -5,7 +5,7 @@
 } */
   
 .searchModal {
-  box-shadow: 1px 1px 8px gray;
+  box-shadow: 1px 1px 6px gray;
   border-top-right-radius: 16px;
   border-bottom-right-radius: 16px;
 }
