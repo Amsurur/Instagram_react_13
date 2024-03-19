@@ -31,9 +31,12 @@ import { getToken } from "../utils/token";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import SearchUser from "../components/SearchUser";
 
+import instLogo from "../pages/Login/instLogo.png";
+import insText from "../pages/Login/insText.png";
+
 export const Layout = () => {
   // Функция для модального окна "Еще"
-  const [modal,setSearchModal]=useState(false)
+  const [modal,setSearcModal]=useState(false)
 
   const location = useLocation();
   const dispatch = useDispatch();
@@ -47,13 +50,13 @@ export const Layout = () => {
 
   return (
     // Главный контейнер
-    <main className="flex dark:bg-black dark:text-white">
+    <main className="flex dark:bg-[black] dark:text-white">
       {/* Флекс контейнер */}
       {/* Navbar */}
       <aside
-        className={`left ${
+        className={`${
           location.pathname === "/basic/message" ||
-          location.pathname === "/basic/message/newMessage"
+          location.pathname === "/basic/message/newMessage"|| modal  
             ? "w-[6%]"
             : "w-[19%]"
         }`}
@@ -62,9 +65,9 @@ export const Layout = () => {
         <div
           className={`${
             location.pathname === "/basic/message" ||
-            location.pathname === "/basic/message/newMessage"
+            location.pathname === "/basic/message/newMessage"|| modal 
               ? "w-[6%]"
-              : "w-[19%]"
+              : "w-[18.91%]"
           } panel-navigation fixed py-[33px] px-[15px] h-[100%] border-r-[1px] border-[#d8d8d8]`}
         >
           <ul
@@ -77,12 +80,12 @@ export const Layout = () => {
               <li
                 className={`${
                   location.pathname === "/basic/message" ||
-                  location.pathname === "/basic/message/newMessage"
+                  location.pathname === "/basic/message/newMessage"|| modal 
                     ? "hidden"
                     : "block"
                 }mb-[15px]`}
               >
-                <img
+                {/* <img
                   src=""
                   alt="adasd"
                   className={`w-[55%] ${
@@ -91,22 +94,38 @@ export const Layout = () => {
                       ? "hidden"
                       : "block"
                   }`}
-                />
+                /> */}
               </li>
               {/* instagram icon */}
-              <li className="px-[9px]">
-                <InstagramIcon sx={{ fontSize: "30px" }} />
+              <li className="px-[9px] flex gap-[4px] items-center">
+                {/* <InstagramIcon sx={{ fontSize: "30px" }} /> */}
+                <img className={`h-[30px] w-[30px]`} src={instLogo} alt="" />
+                <img
+                  className={`h-[40px] w-[55%] ${
+                    location.pathname === "/basic/message" ||
+                    location.pathname === "/basic/message/newMessage"|| modal 
+                      ? "hidden"
+                      : "block"
+                  }`}
+                  src={insText}
+                  alt=""
+                />
               </li>
             </Link>
-            <NavLink to="/basic">
-              <li className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300">
+            <NavLink
+              className={
+                "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+              }
+              to="/basic"
+            >
+              <li className="one flex w-[215px] hover:text-[#3B82F6] items-center gap-[15px]  p-[10px] transition-all duration-300">
                 {/* <img src={navHome} alt="" /> */}
                 <HomeIcon />
                 {/* <FontAwesomeIcon icon={faHouse} className="text-[25px]" /> */}
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage" || modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -116,28 +135,75 @@ export const Layout = () => {
               </li>
             </NavLink>
 
-            {/* <search/> */}
-            <li  onClick={()=>setSearchModal(true)} className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
-              <FontAwesomeIcon
-                icon={faMagnifyingGlass}
-                className="text-[22px]"
-              />
+ {/* <search/> */}
+{
+  modal?(
+    <NavLink onClick={()=>setSearcModal(false)}
+            
+    className={
+      "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+    }
+  >
+    {/* <search/> */}
+    <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
+      <FontAwesomeIcon
+        icon={faMagnifyingGlass}
+        className="text-[22px]"
+      />
 
-              <p
-                className={`${
-                  location.pathname === "/basic/message" ||
-                  location.pathname === "/basic/message/newMessage"
-                    ? "hidden"
-                    : "block"
-                }`}
-              >
-                Поисковой запрос
-              </p>
-            </li>
+      <p
+        className={`${
+          location.pathname === "/basic/message" ||
+          location.pathname === "/basic/message/newMessage"|| modal 
+            ? "hidden"
+            : "block"
+        }`}
+      >
+        Поисковой запрос
+      </p>
+    </li>
+  </NavLink>
+  ):(
+    <NavLink onClick={()=>setSearcModal(true)}
+            
+    className={
+      "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+    }
+  >
+   
+    <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
+      <FontAwesomeIcon
+        icon={faMagnifyingGlass}
+        className="text-[22px]"
+      />
 
-            <Link to="explore">
-              <li className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300">
-                <ExploreOutlinedIcon sx={{ fontSize: "25px" }} />
+      <p
+        className={`${
+          location.pathname === "/basic/message" ||
+          location.pathname === "/basic/message/newMessage"|| modal 
+            ? "hidden"
+            : "block"
+        }`}
+      >
+        Поисковой запрос
+      </p>
+    </li>
+  </NavLink>
+  )
+}
+            {/* <NavLink onClick={()=>setSearcModal(true)}
+            
+              className={
+                "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+              }
+            >
+              {/* <search/> */}
+              {/* <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
+                <FontAwesomeIcon
+                  icon={faMagnifyingGlass}
+                  className="text-[22px]"
+                />
+
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
@@ -146,18 +212,44 @@ export const Layout = () => {
                       : "block"
                   }`}
                 >
+                  Поисковой запрос
+                </p>
+              </li>
+            </NavLink>  */}
+
+            <NavLink
+              to="explore"
+              className={
+                "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+              }
+            >
+              <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px] rounded-[7px] p-[10px] transition-all duration-300">
+                <ExploreOutlinedIcon sx={{ fontSize: "25px" }} />
+                <p
+                  className={`${
+                    location.pathname === "/basic/message" ||
+                    location.pathname === "/basic/message/newMessage"|| modal 
+                      ? "hidden"
+                      : "block"
+                  }`}
+                >
                   Интересное
                 </p>
               </li>
-            </Link>
-            <NavLink to="reels">
-              <li className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300">
+            </NavLink>
+            <NavLink
+              to="reels"
+              className={
+                "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+              }
+            >
+              <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300">
                 {/* <img src={navReels} alt="" className="w-[25px]" /> */}
                 <ReelsIcon />
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage"|| modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -166,14 +258,19 @@ export const Layout = () => {
                 </p>
               </li>
             </NavLink>
-            <NavLink to="message">
-              <li className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300">
+            <NavLink
+              to="message"
+              className={
+                "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+              }
+            >
+              <li className="flex items-center hover:text-[#3B82F6]  w-[55px] gap-[15px] rounded-[7px] p-[10px] transition-all duration-300">
                 {/* <img src={navMessages} alt="" className="w-[25px]" /> */}
                 <MessageIcon />
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage"|| modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -182,34 +279,52 @@ export const Layout = () => {
                 </p>
               </li>
             </NavLink>
-            <li className="flex cursor-pointer items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300">
-              <FontAwesomeIcon icon={faHeart} className="text-[25px]" />
-              <p
-                className={`${
-                  location.pathname === "/basic/message" ||
-                  location.pathname === "/basic/message/newMessage"
-                    ? "hidden"
-                    : "block"
-                }`}
-              >
-                Уведомления
-              </p>
-            </li>
-            <li className="flex items-center cursor-pointer gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300">
-              <AddBoxOutlinedIcon />
-              <p
-                className={`${
-                  location.pathname === "/basic/message" ||
-                  location.pathname === "/basic/message/newMessage"
-                    ? "hidden"
-                    : "block"
-                }`}
-              >
-                Создать
-              </p>
-            </li>
-            <NavLink to="profile">
-              <li className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300">
+            <NavLink
+              className={
+                "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+              }
+            >
+              <li className="flex cursor-pointer hover:text-[#3B82F6] w-[215px] items-center gap-[15px] rounded-[7px] p-[10px] transition-all duration-300">
+                <FontAwesomeIcon icon={faHeart} className="text-[25px]" />
+                <p
+                  className={`${
+                    location.pathname === "/basic/message" ||
+                    location.pathname === "/basic/message/newMessage"|| modal 
+                      ? "hidden"
+                      : "block"
+                  }`}
+                >
+                  Уведомления
+                </p>
+              </li>
+            </NavLink>
+            <NavLink
+              className={
+                "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+              }
+            >
+              <li className="flex items-center hover:text-[#3B82F6] w-[215px] cursor-pointer gap-[15px] rounded-[7px] p-[10px] transition-all duration-300">
+                <AddBoxOutlinedIcon />
+                <p
+                  className={`${
+                    location.pathname === "/basic/message" ||
+                    location.pathname === "/basic/message/newMessage"|| modal 
+                      ? "hidden"
+                      : "block"
+                  }`}
+                >
+                  Создать
+                </p>
+              </li>
+            </NavLink>
+
+            <NavLink
+              to="profile"
+              className={
+                "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+              }
+            >
+              <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px] rounded-[7px] p-[10px] transition-all duration-300">
                 <Avatar
                   src={navProfile}
                   sx={{ width: "25px", height: "25px" }}
@@ -217,7 +332,7 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage"|| modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -226,14 +341,12 @@ export const Layout = () => {
                 </p>
               </li>
             </NavLink>
-            <li
-              className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer"
-            >
+            <li className="flex items-center focus:bg-[red] w-[215px] gap-[15px] hover:text-[#3B82F6] rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
               <FontAwesomeIcon icon={faBars} className="text-[20px]" />
               <p
                 className={`${
                   location.pathname === "/basic/message" ||
-                  location.pathname === "/basic/message/newMessage"
+                  location.pathname === "/basic/message/newMessage"|| modal 
                     ? "hidden"
                     : "block"
                 }`}
@@ -248,11 +361,15 @@ export const Layout = () => {
         {/* Modal Create */}
       </aside>
       {/* searchmodal  */}
+                {modal?(
+                  <SearchUser/>
+                ):null
 
+                }
       <div></div>
 
       {/* Контентная часть */}
-      <aside className="right w-[100%]">
+      <aside className="flex justify-center w-[100%]">
         <Outlet />
         {/* Футер */}
 

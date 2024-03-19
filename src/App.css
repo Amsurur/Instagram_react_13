@@ -1,9 +1,11 @@
-.active {
+/* .active {
   font-weight: 700;
-}
-
+  border-right: 2px solid #3B82F6;
+  color: #3B82F6;
+} */
+  
 .searchModal {
-  box-shadow: 1px 1px 8px gray;
+  box-shadow: 1px 1px 6px gray;
   border-top-right-radius: 16px;
   border-bottom-right-radius: 16px;
 }
