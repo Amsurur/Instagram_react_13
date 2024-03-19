@@ -46,7 +46,7 @@ const Message = () => {
 
   return (
     <div className="flex font-mono">
-      <div className="ml-[5px] w-[25%] border px-[20px] pt-[50px] overflow-y-scroll">
+      <div className="ml-[5px] w-[25%] border px-[20px]  pt-[50px] ">
         <div className="flex justify-between ">
           <p className="flex text-[20px] font-bold">
             <span>terrylucas</span>
@@ -72,9 +72,9 @@ const Message = () => {
             </svg>
           </p>
         </div>
-        <div className="border h-[100vh] mt-[20px]"></div>
+        <div className="border  mt-[20px] "></div>
       </div>
-      <div className="border w-[75%] h-[100vh] ">
+      <div className="border w-[75%] h-[100vh] overflow-y-scroll">
         <div className=" h-[400px] p-[20px] border mt-[300px]">
           <img
             src={messageicon}
