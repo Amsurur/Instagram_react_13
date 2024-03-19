@@ -29,12 +29,14 @@ import ReelsIcon from "../icons/Layout/ReelsIcon";
 import MessageIcon from "../icons/Layout/MessageIcon";
 import { getToken } from "../utils/token";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import SearchUser from "../components/SearchUser";
 
 import instLogo from "../pages/Login/instLogo.png";
 import insText from "../pages/Login/insText.png";
 
 export const Layout = () => {
   // Функция для модального окна "Еще"
+  const [modal,setSearcModal]=useState(false)
 
   const location = useLocation();
   const dispatch = useDispatch();
@@ -52,9 +54,9 @@ export const Layout = () => {
       {/* Флекс контейнер */}
       {/* Navbar */}
       <aside
-        className={`] ${
+        className={`${
           location.pathname === "/basic/message" ||
-          location.pathname === "/basic/message/newMessage"
+          location.pathname === "/basic/message/newMessage"|| modal  
             ? "w-[6%]"
             : "w-[19%]"
         }`}
@@ -63,7 +65,7 @@ export const Layout = () => {
         <div
           className={`${
             location.pathname === "/basic/message" ||
-            location.pathname === "/basic/message/newMessage"
+            location.pathname === "/basic/message/newMessage"|| modal 
               ? "w-[6%]"
               : "w-[18.91%]"
           } panel-navigation fixed py-[33px] px-[15px] h-[100%] border-r-[1px] border-[#d8d8d8]`}
@@ -78,7 +80,7 @@ export const Layout = () => {
               <li
                 className={`${
                   location.pathname === "/basic/message" ||
-                  location.pathname === "/basic/message/newMessage"
+                  location.pathname === "/basic/message/newMessage"|| modal 
                     ? "hidden"
                     : "block"
                 }mb-[15px]`}
@@ -101,7 +103,7 @@ export const Layout = () => {
                 <img
                   className={`h-[40px] w-[55%] ${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage"|| modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -123,7 +125,7 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage" || modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -133,13 +135,70 @@ export const Layout = () => {
               </li>
             </NavLink>
 
-            <NavLink
+ {/* <search/> */}
+{
+  modal?(
+    <NavLink onClick={()=>setSearcModal(false)}
+            
+    className={
+      "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+    }
+  >
+    {/* <search/> */}
+    <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
+      <FontAwesomeIcon
+        icon={faMagnifyingGlass}
+        className="text-[22px]"
+      />
+
+      <p
+        className={`${
+          location.pathname === "/basic/message" ||
+          location.pathname === "/basic/message/newMessage"|| modal 
+            ? "hidden"
+            : "block"
+        }`}
+      >
+        Поисковой запрос
+      </p>
+    </li>
+  </NavLink>
+  ):(
+    <NavLink onClick={()=>setSearcModal(true)}
+            
+    className={
+      "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+    }
+  >
+   
+    <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
+      <FontAwesomeIcon
+        icon={faMagnifyingGlass}
+        className="text-[22px]"
+      />
+
+      <p
+        className={`${
+          location.pathname === "/basic/message" ||
+          location.pathname === "/basic/message/newMessage"|| modal 
+            ? "hidden"
+            : "block"
+        }`}
+      >
+        Поисковой запрос
+      </p>
+    </li>
+  </NavLink>
+  )
+}
+            {/* <NavLink onClick={()=>setSearcModal(true)}
+            
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
               }
             >
               {/* <search/> */}
-              <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
+              {/* <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
                 <FontAwesomeIcon
                   icon={faMagnifyingGlass}
                   className="text-[22px]"
@@ -156,7 +215,7 @@ export const Layout = () => {
                   Поисковой запрос
                 </p>
               </li>
-            </NavLink>
+            </NavLink>  */}
 
             <NavLink
               to="explore"
@@ -169,7 +228,7 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage"|| modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -190,7 +249,7 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage"|| modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -211,7 +270,7 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage"|| modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -230,7 +289,7 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage"|| modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -249,7 +308,7 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage"|| modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -273,7 +332,7 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"
+                    location.pathname === "/basic/message/newMessage"|| modal 
                       ? "hidden"
                       : "block"
                   }`}
@@ -287,7 +346,7 @@ export const Layout = () => {
               <p
                 className={`${
                   location.pathname === "/basic/message" ||
-                  location.pathname === "/basic/message/newMessage"
+                  location.pathname === "/basic/message/newMessage"|| modal 
                     ? "hidden"
                     : "block"
                 }`}
@@ -302,7 +361,11 @@ export const Layout = () => {
         {/* Modal Create */}
       </aside>
       {/* searchmodal  */}
+                {modal?(
+                  <SearchUser/>
+                ):null
 
+                }
       <div></div>
 
       {/* Контентная часть */}
