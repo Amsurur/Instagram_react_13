@@ -34,8 +34,6 @@ import instLogo from "../pages/Login/instLogo.png";
 import insText from "../pages/Login/insText.png";
 
 export const Layout = () => {
-  // Функция для модального окна "Еще"
-
   const location = useLocation();
   const dispatch = useDispatch();
   let [followingState, setFollowingState] = useState(false);
