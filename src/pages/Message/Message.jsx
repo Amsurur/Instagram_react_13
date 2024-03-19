@@ -46,7 +46,7 @@ const Message = () => {
 
   return (
     <div className="flex font-mono">
-      <div className="ml-[5px] w-[25%] border px-[50px] pt-[50px]">
+      <div className="ml-[5px] w-[25%] border px-[20px] pt-[50px] overflow-y-scroll">
         <div className="flex justify-between ">
           <p className="flex text-[20px] font-bold">
             <span>terrylucas</span>
@@ -54,7 +54,7 @@ const Message = () => {
               <img src={arrow} alt="" />
             </span>
           </p>
-          <p className="pt-[5px]">
+          <p className="pt-[5px]" onClick={handleClickOpen}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -72,27 +72,29 @@ const Message = () => {
             </svg>
           </p>
         </div>
+        <div className="border h-[100vh] mt-[20px]"></div>
       </div>
       <div className="border w-[75%] h-[100vh] ">
-        <div className=" h-[330px] p-[20px] border mt-[300px]">
+        <div className=" h-[400px] p-[20px] border mt-[300px]">
           <img
             src={messageicon}
             alt=""
-            className="w-[150px] h-[150px] m-auto  py-2"
+            className="w-[200px] h-[200px] m-auto  py-2"
           />
           <p className=" text-center font-medium text-[20px]">Your messages</p>
           <p className=" text-center font-medium text-[16px] text-gray-400">
             Send private photos and messages to a friend or group
           </p>
-
-          <Button
-            variant="contained"
-            size="large"
-            className="w-[200px] h-[50px] m-auto pt-[30px]"
-            onClick={handleClickOpen}
-          >
-            Send message
-          </Button>
+          <p className="m-auto w-[200px] h-[50px] pt-[20px]">
+            <Button
+              variant="contained"
+              size="large"
+              className="m-auto w-[200px] h-[50px]"
+              onClick={handleClickOpen}
+            >
+              Send message
+            </Button>
+          </p>
         </div>
       </div>
       <BootstrapDialog
