@@ -37,7 +37,7 @@ export const Layout = () => {
   const dispatch = useDispatch();
   let [followingState, setFollowingState] = useState(false);
 
-  const myId = getToken().sid;
+  const myId = getToken()
 
   useEffect(() => {
     AOS.init();
