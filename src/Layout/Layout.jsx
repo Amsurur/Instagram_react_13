@@ -43,6 +43,7 @@ export const Layout = () => {
   let [followingState, setFollowingState] = useState(false);
 
   // const myId = getToken().sid;
+  // const myId = getToken().sid;
 
   useEffect(() => {
     AOS.init();
@@ -341,7 +342,9 @@ export const Layout = () => {
                 </p>
               </li>
             </NavLink>
-            <li className="flex items-center focus:bg-[red] w-[215px] gap-[15px] hover:text-[#3B82F6] rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
+            <li
+              className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer"
+            >
               <FontAwesomeIcon icon={faBars} className="text-[20px]" />
               <p
                 className={`${

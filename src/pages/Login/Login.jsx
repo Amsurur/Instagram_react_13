@@ -27,7 +27,6 @@ const Login = () => {
         userName,
         password,
       });
-      console.log(data);
       if (data.statusCode === 200) {
         saveToken(data.data);
         navigate("/basic");
@@ -98,7 +97,9 @@ const Login = () => {
         <div className="h-[70px] w-[400px] border border-[#E2E8F0] rounded-[12px] mt-[15px] flex items-center justify-center">
           <p>
             Don't have an account?{" "}
-            <span className="text-[#3B82F6]">Sign up</span>
+            <a href="./Registration" className="text-[#3B82F6]">
+              Sign up
+            </a>
           </p>
         </div>
       </div>
