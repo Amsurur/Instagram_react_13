@@ -373,6 +373,9 @@ export const Layout = () => {
         <Outlet />
         {/* Футер */}
 
+
+        
+
         {/* <footer  className="py-[10px]">
   
           <ul className="flex flex-wrap items-center justify-center gap-x-[10px] mx-auto w-[55%]">
