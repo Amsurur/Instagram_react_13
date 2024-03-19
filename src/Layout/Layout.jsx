@@ -42,7 +42,7 @@ export const Layout = () => {
   const dispatch = useDispatch();
   let [followingState, setFollowingState] = useState(false);
 
-  const myId = getToken().sid;
+  // const myId = getToken().sid;
 
   useEffect(() => {
     AOS.init();
@@ -369,7 +369,13 @@ export const Layout = () => {
       <div></div>
 
       {/* Контентная часть */}
-      <aside className="flex justify-center w-[100%]">
+      <aside
+        className={`${
+          location.pathname === "/basic/message"
+            ? "rigth"
+            : "flex justify-center "
+        } w-[100%]`}
+      >
         <Outlet />
         {/* Футер */}
 
