@@ -1,21 +1,26 @@
-import React from "react"; 
-import Login from "./pages/Login/Login"; 
-import Home from "./pages/Home/Home"; 
-import Explore from "./pages/Explore/Explore"; 
-import Reels from "./pages/Reels/Reels"; 
-import Message from "./pages/Message/Message"; 
+import React from "react";
+import Login from "./pages/Login/Login";
+import Home from "./pages/Home/Home";
+import Explore from "./pages/Explore/Explore";
+import Reels from "./pages/Reels/Reels";
+import Message from "./pages/Message/Message";
 import Natification from "./pages/natification/Natification";
-import Profile from "./pages/Profile/Profile"; 
+import Profile from "./pages/Profile/Profile";
 import Settings from "./pages/Settings/Settings";
-import { createBrowserRouter, RouterProvider } from "react-router-dom"; 
-import { Layout } from "./Layout/Layout"; 
-import Registration from "./pages/Registration/Registration"; 
- 
-export const App = () => { 
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Layout } from "./Layout/Layout";
+import Registration from "./pages/Registration/Registration";
+import AuthCheck from "./utils/AuthChek";
+
+export const App = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Login />,
+      element: (
+        <AuthCheck>
+          <Login />
+        </AuthCheck>
+      ),
     },
     {
       path: "/basic",
@@ -52,10 +57,13 @@ export const App = () => {
       ],
     },
     {
-      path: "/registration",
-      element: <Registration />,
+      path: "/Registration",
+      element: (
+        <AuthCheck>
+          <Registration />
+        </AuthCheck>
+      ),
     },
-  ]); 
- 
-  return <RouterProvider router={router} />; 
+  ]);
+  return <RouterProvider router={router} />;
 };
