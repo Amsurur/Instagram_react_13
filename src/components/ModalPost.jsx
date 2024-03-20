@@ -58,27 +58,37 @@ const ModalPost = () => {
     const [content, setContent] = useState("")
     const [img, setImg] = useState([])
     
-    const [base, setBase]=useState(null)
-    console.log(base);
+    const [base, setBase]=useState([])
+    const [base1, setBase1]=useState(null)
+    
     
     const fileInputRef = useRef(null);
     
     
     const handleFileInputChange = (event) => {
-        const file = event.target.files[0];
-        setImg(file)
-        if (file) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                setBase(reader.result);
-            };
-        }
+        const files = event.target.files[0];
+        setImg(files)
+        if (files) {
+            const newBase64Strings = [];
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.readAsDataURL(files[i]);
+                reader.onloadend = () => {
+                    const base64Data = reader.result.split(',')[1];
+                    newBase64Strings.push(base64Data);
+                    if (newBase64Strings.length === files.length) {
+                        setBase(newBase64Strings);
+                    }
+                };
+            }
+
+        
 
         console.log(base);
         
-        console.log('Selected file:', file);
+        console.log('Selected file:', files);
     };
+}
     
     const handleButtonClick = () => {
         fileInputRef.current.click();
@@ -144,7 +154,22 @@ const ModalPost = () => {
                     </div>
                     <Typography id="modal-modal-description" sx={{ mt: 3 }}>
 
-                        <img className='m-auto h-[150px] mt-[5%]' src={base === null?  log : base} alt="" />
+                        {/* <img 
+                        
+                        onChange={handleFileInputChange}
+                        className='m-auto h-[150px] mt-[5%]' src={base === null?  log : base} alt="" /> */}
+
+           <div className='w-[90%] m-auto flex justify-between flex-wrap '>
+            
+            {base?.map((bases, index) => (
+                <div key={index}>
+                    <img
+                     onChange={handleFileInputChange}
+                     className='m-auto h-[150px] gap-[20px_0] mt-[5%]' src={base.length === 0 ?  log : bases} alt="Uploaded" />
+                </div>
+            ))}
+        </div>
+
 
 
                     </Typography>
