@@ -33,6 +33,14 @@ import SearchUser from "../components/SearchUser";
 
 import instLogo from "../pages/Login/instLogo.png";
 import insText from "../pages/Login/insText.png";
+import ModalPost from "../components/ModalPost";
+
+
+// Post Modal
+
+
+
+
 
 export const Layout = () => {
   // Функция для модального окна "Еще"
@@ -44,6 +52,9 @@ export const Layout = () => {
 
   // const myId = getToken().sid;
   // const myId = getToken().sid;
+
+
+ 
 
   useEffect(() => {
     AOS.init();
@@ -299,25 +310,7 @@ export const Layout = () => {
                 </p>
               </li>
             </NavLink>
-            <NavLink
-              className={
-                "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
-              }
-            >
-              <li className="flex items-center hover:text-[#3B82F6] w-[215px] cursor-pointer gap-[15px] rounded-[7px] p-[10px] transition-all duration-300">
-                <AddBoxOutlinedIcon />
-                <p
-                  className={`${
-                    location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"|| modal 
-                      ? "hidden"
-                      : "block"
-                  }`}
-                >
-                  Создать
-                </p>
-              </li>
-            </NavLink>
+            <ModalPost/>
 
             <NavLink
               to="profile"
@@ -379,8 +372,20 @@ export const Layout = () => {
             : "flex justify-center "
         } w-[100%]`}
       >
+
+
+ 
+
+
+
+
+
+
         <Outlet />
         {/* Футер */}
+
+
+        
 
         {/* <footer  className="py-[10px]">
   
