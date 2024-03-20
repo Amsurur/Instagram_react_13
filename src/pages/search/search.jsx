@@ -3,7 +3,6 @@ import { useState } from 'react'
 
 const search = () => {
 
-    // const [modal,setSearchModal]=useState(false)
 
   return (
   <>
