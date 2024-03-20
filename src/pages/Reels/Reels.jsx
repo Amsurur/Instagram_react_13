@@ -10,8 +10,9 @@ import "./styles.css";
 import { Pagination } from "swiper/modules";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getReels } from "../../api/reels/Reels";
+import { getReels, likeReel } from "../../api/reels/Reels";
 import { IconButton } from "@mui/material";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
 
 const Reels = () => {
   let data = useSelector((state) => state.reels?.data);
@@ -29,6 +30,9 @@ const Reels = () => {
       <div className=" relative flex mt-2">
         <div className="w-[520px] h-[620px] m-auto   ">
           <Swiper
+            slidesPerView={1}
+            spaceBetween={40}
+            mousewheel={true}
             direction={"vertical"}
             style={{
               border: "1px solid blue",
@@ -44,43 +48,52 @@ const Reels = () => {
             <div>
               {data?.map((el) => {
                 return (
-                  <SwiperSlide>
-                    <span></span>
-                    <video controls>
-                      <source
-                        type="video/mp4"
-                        src={`${imageApi}${el.images}`}
-                      />
-                    </video>
-
+                  <SwiperSlide key={el.postId}>
+                    <div className="bg-slate-900 ">
+                      <video
+                        controls
+                        style={{ height: "650px", width: "600px" }}
+                      >
+                        <source
+                          className="w-[full] h-[full]"
+                          type="video/mp4"
+                          src={`${imageApi}${el.images}`}
+                        />
+                      </video>
+                    </div>
                     <div className="w-[40px] h-[300px]  grid absolute left-[390px] mt-[290px]">
                       {/* <VolumeOffIcon /> */}
-                      <p>
-                        <VolumeOffIcon className="text-[white]" />
-
-                        <VolumeUpIcon className="text-[white]" />
-                      </p>
-                      <IconButton
-                        sx={{
-                          flexDirection: "column-reverse",
-                          gap: "30px",
-                          marginTop: "20px",
-                        }}
+                      <p></p>
+                      <button
+                        onClick={() => dispatch(likeReel(el.postId))}
+                        className="w-[30px]"
                       >
-                        <SendIcon
-                          sx={{ width: "40px", height: "40px" }}
-                          color="primary"
-                        />
-
-                        <CommentIcon
-                          sx={{ width: "40px", height: "40px" }}
-                          color="info"
-                        />
-                        <FavoriteBorderIcon
-                          sx={{ width: "40px", height: "40px" }}
-                          color="primary"
-                        />
-                      </IconButton>
+                        {el.postLike ? (
+                          <Favorite
+                            style={{ color: "red" }}
+                            sx={{ width: "40px", height: "30px" }}
+                            color="error"
+                          ></Favorite>
+                        ) : (
+                          <FavoriteBorder
+                            sx={{ width: "40px", height: "30px" }}
+                            style={{ color: "white" }}
+                          ></FavoriteBorder>
+                        )}
+                        <span style={{ color: "white", margin: "50%" }}>
+                          {el.postLikeCount}
+                        </span>
+                      </button>
+                      <CommentIcon
+                        style={{ color: "white" }}
+                        sx={{ width: "40px", height: "30px" }}
+                        color="info"
+                      />
+                      <SendIcon
+                        style={{ color: "white" }}
+                        sx={{ width: "40px", height: "30px" }}
+                        color="info"
+                      />
                     </div>
                   </SwiperSlide>
                 );
