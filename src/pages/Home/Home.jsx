@@ -229,7 +229,7 @@ const Home = () => {
                       <div className="w-[70px] h-[70%] rounded-full border flex items-center justify-center bgGradient">
                         <img
                           src={el.img}
-                          className="w-[90%] h-[90%] rounded-full bg-cover"
+                          className="w-[90%] bgGradient h-[90%] rounded-full bg-cover"
                           alt=""
                         />
                       </div>
@@ -316,10 +316,10 @@ const Home = () => {
                       >
                         {el.postLike ? (
                           <FavoriteRoundedIcon
-                            sx={{ fontSize: 30, color: "red" }}
+                            sx={{ fontSize: 20, color: "red" }}
                           />
                         ) : (
-                          <FavoriteBorderRoundedIcon sx={{ fontSize: 30 }} />
+                          <FavoriteBorderRoundedIcon sx={{ fontSize: 20 }} />
                         )}
                       </div>
                       <div
@@ -329,7 +329,7 @@ const Home = () => {
                         }}
                         className="w-[30px] h-[30px]  flex items-center justify-center"
                       >
-                        <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 30 }} />
+                        <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 20 }} />
                       </div>
                       <div
                         onClick={() => {
@@ -337,7 +337,7 @@ const Home = () => {
                         }}
                         className="w-[30px] h-[30px]  flex items-center justify-center"
                       >
-                        <SendOutlinedIcon sx={{ fontSize: 30 }} />
+                        <SendOutlinedIcon sx={{ fontSize: 20 }} />
                       </div>
                     </div>
                     <div
@@ -347,9 +347,9 @@ const Home = () => {
                       className="w-[35px] h-[35px]  flex items-center justify-center"
                     >
                       {savePublic ? (
-                        <BookmarkOutlinedIcon sx={{ fontSize: 30 }} />
+                        <BookmarkOutlinedIcon sx={{ fontSize: 20 }} />
                       ) : (
-                        <BookmarkBorderOutlinedIcon sx={{ fontSize: 30 }} />
+                        <BookmarkBorderOutlinedIcon sx={{ fontSize: 20 }} />
                       )}
                     </div>
                   </div>
@@ -518,7 +518,29 @@ const Home = () => {
               <div className="h-[400px] overflow-scroll">
                 {commentPublic?.comments?.map((el) => {
                   return (
-                    <div className="w-[95%] m-auto h-[50px] bg-orange-400"></div>
+                    <div className="w-[95%] m-auto h-[50px] bg-orange-400 flex items-center">
+                      {data2?.map((item, ii) => {
+                        if (item.id == el.userId) {
+                          return (
+                            <>
+                              <div className="h-[95%]  bg-green-500 w-full flex items-center ">
+                                <div className="w-[40px] h-[40px] border rounded-full">
+                                  <img
+                                    src={""}
+                                    className="w-full h-full rounded-full"
+                                    alt=""
+                                  />
+                                </div>
+                                <h className="font-bold ml-1">{}</h>
+                                <p className="text-[gray] text-[14px]">
+                                  {el.comment}
+                                </p>
+                              </div>
+                            </>
+                          );
+                        }
+                      })}
+                    </div>
                   );
                 })}
               </div>
@@ -527,17 +549,17 @@ const Home = () => {
                   <div className="w-[130px] h-[35px]  flex justify-between items-center">
                     <div
                       onClick={() => {
-                        dispatch(likePost(el.postId));
+                        dispatch(likePost(commentPublic?.postId));
                       }}
                       className="w-[30px] h-[30px]  flex items-center justify-center"
                     >
-                      {/* {el.postLike ? ( */}
-                        {/* <FavoriteRoundedIcon
-                          sx={{ fontSize: 30, color: "red" }}
+                      {commentPublic?.postLike ? (
+                        <FavoriteRoundedIcon
+                          sx={{ fontSize: 20, color: "red" }}
                         />
-                      ) : ( */}
-                        <FavoriteBorderRoundedIcon sx={{ fontSize: 30 }} />
-                      {/* )} */}
+                      ) : (
+                        <FavoriteBorderRoundedIcon sx={{ fontSize: 20 }} />
+                      )}
                     </div>
                     <div
                       onClick={() => {
@@ -546,15 +568,13 @@ const Home = () => {
                       }}
                       className="w-[30px] h-[30px]  flex items-center justify-center"
                     >
-                      <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 30 }} />
+                      <ChatBubbleOutlineOutlinedIcon sx={{ fontSize: 20 }} />
                     </div>
                     <div
-                      onClick={() => {
-                        // setCommentPublic(!commentPublic);
-                      }}
+                      onClick={() => {}}
                       className="w-[30px] h-[30px]  flex items-center justify-center"
                     >
-                      <SendOutlinedIcon sx={{ fontSize: 30 }} />
+                      <SendOutlinedIcon sx={{ fontSize: 20 }} />
                     </div>
                   </div>
                   <div
@@ -563,10 +583,10 @@ const Home = () => {
                     }}
                     className="w-[35px] h-[35px]  flex items-center justify-center"
                   >
-                    {/* {savePublic ? (
+                    {/* {commentPublic ? (
                       <BookmarkOutlinedIcon sx={{ fontSize: 30 }} />
                     ) : ( */}
-                      <BookmarkBorderOutlinedIcon sx={{ fontSize: 30 }} />
+                    <BookmarkBorderOutlinedIcon sx={{ fontSize: 20 }} />
                     {/* )} */}
                   </div>
                 </div>
