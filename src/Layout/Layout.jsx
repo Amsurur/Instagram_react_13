@@ -125,6 +125,7 @@ export const Layout = () => {
               </li>
             </Link>
             <NavLink
+              onClick={()=>setSearcModal(false)}
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
               }
@@ -156,7 +157,6 @@ export const Layout = () => {
       "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
     }
   >
-    {/* <search/> */}
     <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
       <FontAwesomeIcon
         icon={faMagnifyingGlass}
@@ -231,6 +231,7 @@ export const Layout = () => {
 
             <NavLink
               to="explore"
+              onClick={()=>setSearcModal(false)}
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
               }
@@ -240,7 +241,7 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"|| modal 
+                    location.pathname === "/basic/message/newMessage"|| modal  
                       ? "hidden"
                       : "block"
                   }`}
@@ -251,6 +252,7 @@ export const Layout = () => {
             </NavLink>
             <NavLink
               to="reels"
+              onClick={()=>setSearcModal(false)}
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
               }
@@ -271,6 +273,7 @@ export const Layout = () => {
               </li>
             </NavLink>
             <NavLink
+              onClick={()=>setSearcModal(false)}
               to="message"
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
@@ -292,6 +295,7 @@ export const Layout = () => {
               </li>
             </NavLink>
             <NavLink
+              onClick={()=>setSearcModal(false)}
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
               }
@@ -314,6 +318,7 @@ export const Layout = () => {
 
             <NavLink
               to="profile"
+              onClick={()=>setSearcModal(false)}
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
               }
@@ -336,6 +341,7 @@ export const Layout = () => {
               </li>
             </NavLink>
             <li
+              onClick={()=>setSearcModal(false)}
               className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer"
             >
               <FontAwesomeIcon icon={faBars} className="text-[20px]" />
@@ -362,7 +368,7 @@ export const Layout = () => {
                 ):null
 
                 }
-      <div></div>
+      
 
       {/* Контентная часть */}
       <aside

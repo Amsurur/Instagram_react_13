@@ -9,7 +9,7 @@ export const store = configureStore({
     reels: videoReels,
     message: counterSlice,
     post: postSlice,
-    todo:searchSlice,
+    search:searchSlice,
   },
 
 });
