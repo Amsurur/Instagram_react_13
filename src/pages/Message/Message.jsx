@@ -10,10 +10,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import { getData } from "../../api/Message/messageApi";
+import { addchat, chatData, getData } from "../../api/Message/messageApi";
 import { Data } from "../../api/Message/messageApi";
+import { getToken } from "../../utils/token";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -26,6 +26,15 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const Message = () => {
   const [open, setOpen] = useState(false);
+  const [id, setId] = useState(null);
+  const [chathiden, setChatHiden] = useState(false);
+  let [search, setSearch] = useState("");
+
+  let data = useSelector((state) => state.message.data);
+  let chatdata = useSelector((state) => state.message.data1);
+  let chattext = useSelector((state) => state.message.data2);
+
+  let a = false;
 
   let dispatch = useDispatch();
 
@@ -36,20 +45,12 @@ const Message = () => {
     setOpen(false);
   };
 
-  let data = useSelector((state) => state.message.data);
-  let chatdata = useSelector((state) => state.message.data1);
-
-  let [search, setSearch] = useState("");
-
   useEffect(() => {
     dispatch(getData());
-  }, []);
-
-  useEffect(() => {
+    dispatch(chatData(id));
     dispatch(Data());
-  }, []);
-
-  console.log(data);
+  }, [id, dispatch]);
+  console.log(chattext);
 
   return (
     <div>
@@ -83,7 +84,13 @@ const Message = () => {
           <div className="  mt-[20px]  py-[10px]">
             {chatdata?.map((e) => {
               return (
-                <div className="flex pb-5 cursor-pointer" key={e.id}>
+                <div
+                  onClick={() => {
+                    setId(e.chatId), setChatHiden(true);
+                  }}
+                  className="flex pb-5 cursor-pointer"
+                  key={e.chatId}
+                >
                   <div>
                     <img
                       src={
@@ -109,29 +116,66 @@ const Message = () => {
           </div>
         </section>
         <section className=" w-[75%] h-[100vh] overflow-y-scroll">
-          <div className=" h-[400px] p-[20px]  mt-[25%]">
-            <img
-              src={messageicon}
-              alt=""
-              className="w-[200px] h-[200px] m-auto  py-2"
-            />
-            <p className=" text-center font-medium text-[20px]">
-              Your messages
-            </p>
-            <p className=" text-center font-medium text-[16px] text-gray-400">
-              Send private photos and messages to a friend or group
-            </p>
-            <p className="m-auto w-[200px] h-[50px] pt-[20px]">
-              <Button
-                variant="contained"
-                size="large"
-                className="m-auto w-[200px] h-[50px]"
-                onClick={handleClickOpen}
-              >
-                Send message
-              </Button>
-            </p>
-          </div>
+          {!chathiden ? (
+            <div className="h-[400px] p-[20px] mt-[25%]">
+              <img
+                src={messageicon}
+                alt=""
+                className="w-[200px] h-[200px] m-auto  py-2"
+              />
+              <p className="text-center font-medium text-[20px]">
+                Your messages
+              </p>
+              <p className="text-center font-medium text-[16px] text-gray-400">
+                Send private photos and messages to a friend or group
+              </p>
+              <p className="m-auto w-[200px] h-[50px] pt-[20px]">
+                <Button
+                  variant="contained"
+                  size="large"
+                  className="m-auto w-[200px] h-[50px]"
+                  onClick={handleClickOpen}
+                >
+                  Send message
+                </Button>
+              </p>
+            </div>
+          ) : (
+            <div>
+              {chattext?.map((e) => {
+                if (e.userId == getToken().sid) {
+                  return (
+                    <div className="w-[100%] flex text-start justify-end items-center">
+                      <div className=""></div>
+                      <div className="card bg-blue-500 text-end flex flex-wrap p-[8px] font-[600] mr-[1%] rounded-[10px_10px_0px_10px] gap-2 text-[16px] text-[white] mt-[2%]">
+                        {e.messageText}
+                      </div>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className="w-[100%] flex text-start items-center ">
+                      <img
+                        src={
+                          e.userPhoto === ""
+                            ? avatar
+                            : `${import.meta.env.VITE_APP_FILES_URL}${
+                                e.userPhoto
+                              }`
+                        }
+                        alt=""
+                        className="rounded-full h-[40px] w-[40px]"
+                      />
+                      <div className="card bg-[#F8FAFC] ml-[1%] text-end flex flex-wrap p-[8px] font-[600] rounded-[0px_10px_10px_10px] gap-2 text-[16px] text-[#475569] mt-[2%]">
+                        {e.messageText}
+                      </div>
+                      <div className="ml-[1%]"></div>
+                    </div>
+                  );
+                }
+              })}
+            </div>
+          )}
         </section>
       </div>
 
@@ -166,7 +210,7 @@ const Message = () => {
               placeholder="Search..."
             />
             <div className=" mt-[20px] h-[15%]">
-              {data.map((e) => {
+              {data?.map((e) => {
                 return (
                   <div key={e.id} className="flex justify-between ">
                     <div className="flex pb-5">
@@ -192,6 +236,7 @@ const Message = () => {
                       <input
                         type="checkbox"
                         className="h-[15px] w-[15px] mt-3 rounded-full"
+                        onChange={() => dispatch(addchat(e.id))}
                       />
                     </div>
                   </div>
@@ -207,7 +252,7 @@ const Message = () => {
             className="w-full"
             onClick={handleClose}
           >
-            Chat
+            Create Chate
           </Button>
         </DialogActions>
       </BootstrapDialog>
