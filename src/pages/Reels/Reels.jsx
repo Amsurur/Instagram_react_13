@@ -10,7 +10,7 @@ import "./styles.css";
 import { Pagination } from "swiper/modules";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getReels, likeReel } from "../../api/reels/Reels";
+import { getReels, likeReel, postComment } from "../../api/reels/Reels";
 import { IconButton } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 
@@ -24,9 +24,12 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import CloseIcon from "@mui/icons-material/Close";
 import AddReactionIcon from "@mui/icons-material/AddReaction";
+import { setComment } from "../../reducers/reels/Reelse";
 
 const Reels = () => {
+  const Byid = useSelector((state) => state.reels.Byid);
   let data = useSelector((state) => state.reels?.data);
+  const comments = useSelector((state) => state.reels.setComment);
   console.log(data);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -149,17 +152,60 @@ const Reels = () => {
               marginTop: "60px",
             }}
           >
-            <div className="p-[20px] rounded-xl">
-              <div className="flex items-center gap-[20px]">
+            <div>
+              <div className="flex items-center p-[10px] gap-[20px]">
                 <CloseIcon onClick={() => handleClose()} />
                 <h1 className="text-[18px] font-[500] text-[gray]">Comments</h1>
               </div>
-              <div className="pt-[5px] pb-[5px] flex items-center">
+              {data.map((el) => {
+                return (
+                  <div key={el.id}>
+                    {el.comments.map((el) => {
+                      return (
+                        <div className="flex overflow-hidden">
+                          <img
+                            className="w-[30px] h-[30px]"
+                            src={
+                              length == 0
+                                ? "https://tse4.mm.bing.net/th?id=OIP.jixXH_Els1MXBRmKFdMQPAHaHa&pid=Api&P=0&h=220"
+                                : Byid?.images
+                            }
+                            alt=""
+                          />
+                          <div className="">
+                            <h1 className="ml-2 font-bold">me</h1>
+                            <h1 className="ml-2 w-[200px]">{el.comment}</h1>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+            <div className=" bg-white rounded-xl">
+              <div className="pt-[5px]  pb-[5px] flex items-center">
                 <input
                   className="text-[gray] text-[18px] w-[80%] h-[40px] pl-[10px] outline-none"
                   placeholder="Add a comment..."
                   type="text"
+                  onChange={(e) => dispatch(setComment(e.target.value))}
+                  value={comments}
                 />
+                <button
+                  className="text-[#2121eeb0] mr-4"
+                  onClick={(e) => {
+                    dispatch(
+                      postComment({
+                        comment: comments,
+                        postId: e.postId,
+                      })
+                    );
+                    dispatch(setComment(""));
+                  }}
+                >
+                  post
+                </button>
                 <AddReactionIcon sx={{ color: "gray" }} />
               </div>
             </div>
