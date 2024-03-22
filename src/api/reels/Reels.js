@@ -5,7 +5,7 @@ import { axiosRequest } from "../../utils/axiosRequest";
 export const getReels = createAsyncThunk("reels/getReels", async () => {
   try {
     const { data } = await axiosRequest.get("Post/get-reels");
-    console.log(data.data);
+
     return data.data;
   } catch (error) {
     console.log(error);
@@ -14,14 +14,20 @@ export const getReels = createAsyncThunk("reels/getReels", async () => {
 
 export const likeReel = createAsyncThunk(
   "reels/likeReel",
-  async (postId, { dispatch }) => {
+  async (Id, { dispatch }) => {
     try {
-      const { data } = await axiosRequest.post(
-        `Post/like-post?postId=${postId}`
-      );
-      dispatch(getReels(postId));
+      const { data } = await axiosRequest.post(`Post/like-post?postId=${Id}`);
+      console.log(Id, "jdjfkdjfkdj");
+      dispatch(getReels(Id));
     } catch (error) {
       console.log(error);
     }
   }
 );
+export const AddComent = createAsyncThunk("reels/addComent", async () => {
+  try {
+    const { data } = await axiosRequest.post(`Post/add-comment`);
+  } catch (error) {
+    console.log(error);
+  }
+});

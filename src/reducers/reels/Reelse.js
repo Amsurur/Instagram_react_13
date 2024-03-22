@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getReels } from "../../api/reels/Reels";
+import { getReels, likeReel } from "../../api/reels/Reels";
 
 export const videoReels = createSlice({
   name: "reels",
   initialState: {
     cnt: 0,
     data: [],
-    // user: [],
-    // setComment: "",
+    user: [],
+    setComment: "",
     // followingsUser: [],
     // followersUser: [],
   },
@@ -21,6 +21,9 @@ export const videoReels = createSlice({
       console.log(action.payload);
       state.data = action.payload;
     });
+      builder.addCase(likeReel.fulfilled,(state, action) => {
+        state.user=action.payload;
+      });
     // builder.addCase(getComment.fulfilled, (state, action) => {
     //   state.data = action.payload;
     // });
