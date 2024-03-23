@@ -1,17 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosRequest } from "../../utils/axiosRequest";
+import { videoReels } from "../../reducers/reels/Reelse";
 // import axiosRequest from "../../src/utils/axiosRequest";
 let idx = null;
 
-
-
 export const postComment = createAsyncThunk(
   "reels/postComment",
-  async function (e, { dispatch }) {
+  async function (el, { dispatch }) {
     try {
       const { data } = await axiosRequest.post("Post/add-comment", {
-        comment: e.comment,
-        postId: e.postId,
+        comment: el.comment,
+        postId: el.postId,
       });
 
       dispatch(getComment(idx));
@@ -29,10 +28,10 @@ export const getComment = createAsyncThunk("reels/getComment", async () => {
     console.log(error);
   }
 });
-export const getReels = createAsyncThunk("reels/getReels", async () => {
+export const getReels = createAsyncThunk("reels/getReels", async (dispatch) => {
   try {
     const { data } = await axiosRequest.get("Post/get-reels");
-
+       
     return data.data;
   } catch (error) {
     console.log(error);
@@ -41,11 +40,12 @@ export const getReels = createAsyncThunk("reels/getReels", async () => {
 
 export const likeReel = createAsyncThunk(
   "reels/likeReel",
-  async (Id, { dispatch }) => {
+  async (Id, dispatch ) => {
     try {
       const { data } = await axiosRequest.post(`Post/like-post?postId=${Id}`);
       console.log(Id, "jdjfkdjfkdj");
-      dispatch(getReels(Id));
+      console.log("likereel", data);
+      // dispatch(getReels());
     } catch (error) {
       console.log(error);
     }

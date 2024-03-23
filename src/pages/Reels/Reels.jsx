@@ -28,9 +28,9 @@ import { setComment } from "../../reducers/reels/Reelse";
 
 const Reels = () => {
   const Byid = useSelector((state) => state.reels.Byid);
-  let data = useSelector((state) => state.reels?.data);
+  let data = useSelector((state) => state.reels.data);
   const comments = useSelector((state) => state.reels.setComment);
-  console.log(data);
+  console.log("data is", data);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getReels());
@@ -40,6 +40,18 @@ const Reels = () => {
   const [one, setOne] = useState(false);
   const handleScroll = () => {
     console.log("scrolling is True");
+  };
+
+  const likedId = (id, el) => {
+    console.log("post-like", el);
+    dispatch(likeReel(id, el));
+    console.log(data, "state.reels.data");
+  };
+
+  const unLikedId = (id, el) => {
+    console.log("post-like", el);
+    dispatch(likeReel(id, el));
+    console.log(data, "state.reels.data");
   };
 
   // function of Modal
@@ -60,7 +72,7 @@ const Reels = () => {
           onScroll={() => handleScroll()}
           className="w-[600px] h-[660px] m-[auto]  overflow-y-auto p-[20px] overflow-x-hidden"
         >
-          {data?.map((elem) => {
+          {data.map((elem) => {
             return (
               <div className="w-[90%] m-[auto] mt-[20px] ">
                 <video controls muted autoPlay loop>
@@ -74,7 +86,7 @@ const Reels = () => {
                 </video>
 
                 <div className="relative bottom-[350px] z-1 left-[420px]">
-                  {elem.postLike ? (
+                  {elem?.postLike ? (
                     <Favorite
                       style={{
                         color: "red",
@@ -83,7 +95,7 @@ const Reels = () => {
                         cursor: "pointer",
                       }}
                       color="error"
-                      onClick={() => dispatch(likeReel(elem.postId))}
+                      onClick={() => likedId(elem.postId, elem)}
                     ></Favorite>
                   ) : (
                     <FavoriteBorder
@@ -93,7 +105,7 @@ const Reels = () => {
                         height: "35px",
                         cursor: "pointer",
                       }}
-                      onClick={() => dispatch(likeReel(elem.postId))}
+                      onClick={() => unLikedId(elem.postId, elem)}
                     ></FavoriteBorder>
                   )}
                   <h1 className="text-[white] pl-[12px] pt-[5px]">
@@ -173,7 +185,7 @@ const Reels = () => {
                             alt=""
                           />
                           <div className="">
-                            <h1 className="ml-2 font-bold">me</h1>
+                            <h1 className="ml-2 font-bold">Name</h1>
                             <h1 className="ml-2 w-[200px]">{el.comment}</h1>
                           </div>
                         </div>
@@ -184,7 +196,10 @@ const Reels = () => {
               })}
             </div>
             <div className=" bg-white rounded-xl">
-              <div className="pt-[5px]  pb-[5px] flex items-center">
+              <div
+                className="pt-[5px]  pb-[5px] flex items-center"
+                style={{ position: "fixed", bottom: "38%" }}
+              >
                 <input
                   className="text-[gray] text-[18px] w-[80%] h-[40px] pl-[10px] outline-none"
                   placeholder="Add a comment..."
@@ -198,7 +213,7 @@ const Reels = () => {
                     dispatch(
                       postComment({
                         comment: comments,
-                        postId: e.postId,
+                        postId: e.postId, // <- Issue here, e.postId is likely undefined
                       })
                     );
                     dispatch(setComment(""));
@@ -206,6 +221,28 @@ const Reels = () => {
                 >
                   post
                 </button>
+                {/* <input
+                  className="text-[gray] text-[18px] w-[80%] h-[40px] pl-[10px] outline-none"
+                  placeholder="Add a comment..."
+                  type="text"
+                  onChange={(e) => dispatch(setComment(e.target.value))}
+                  value={comments}
+                /> */}
+                {/* <button
+                  className="text-[#2121eeb0] mr-4"
+                  onClick={(e) => {
+                    dispatch(
+                      postComment({
+                        comment: comments,
+                        postId: e.postId,
+                      })
+                    );
+                    dispatch(setComment(""));
+                  }}
+                >
+                  post
+                </button> */}
+
                 <AddReactionIcon sx={{ color: "gray" }} />
               </div>
             </div>
