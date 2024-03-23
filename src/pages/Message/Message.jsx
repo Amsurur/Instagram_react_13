@@ -14,6 +14,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { addchat, chatData, getData } from "../../api/Message/messageApi";
 import { Data } from "../../api/Message/messageApi";
 import { getToken } from "../../utils/token";
+import CallIcon from "@mui/icons-material/Call";
+import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import InsertPhotoOutlinedIcon from "@mui/icons-material/InsertPhotoOutlined";
+import SendIcon from "@mui/icons-material/Send";
+import SentimentSatisfiedAltOutlinedIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
+import MicNoneOutlinedIcon from "@mui/icons-material/MicNoneOutlined";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -29,6 +36,10 @@ const Message = () => {
   const [id, setId] = useState(null);
   const [chathiden, setChatHiden] = useState(false);
   let [search, setSearch] = useState("");
+  const [message1, setMessage1] = useState("");
+  const [chatIdx, setChatIdx] = useState(null);
+  const [chatIdx1, setChatIdx1] = useState(null);
+  const [chatIdx2, setChatIdx2] = useState(null);
 
   let data = useSelector((state) => state.message.data);
   let chatdata = useSelector((state) => state.message.data1);
@@ -44,6 +55,28 @@ const Message = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  async function sendMessage(e) {
+    e.preventDefault();
+    if (message1.trim().length > 0) {
+      try {
+        console.log(chatIdx);
+        // console.log(text);
+        const obj = {
+          chatId: chatIdx,
+          messageText: message1,
+        };
+        const { data } = await axiosRequest.post(`Chat/send-message`, obj);
+        // getMessage(chatIdx);
+        dispatch(getMessage(chatIdx2));
+        setMessage1("");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      // getMessage(chatIdx);
+      alert("Please enter your message");
+    }
+  }
 
   useEffect(() => {
     dispatch(getData());
@@ -55,8 +88,8 @@ const Message = () => {
   return (
     <div>
       <div className="flex font-mono z-[10000]">
-        <section className="ml-[5px] w-[25%]  px-[20px]  pt-[50px]  border-x-[1px] border-blue-300">
-          <div className="flex justify-between ">
+        <section className="ml-[5px] w-[25%]  px-[20px]  pt-[50px]  border-x-[2px] border-gray-300">
+          <div className="flex justify-between  ">
             <p className="flex text-[20px] font-bold cursor-pointer">
               <span>Adham</span>
               <span className=" relative top-3 left-2">
@@ -81,7 +114,7 @@ const Message = () => {
               </svg>
             </p>
           </div>
-          <div className="  mt-[20px]  py-[10px]">
+          <div className="  mt-[10%]  py-[10px]">
             {chatdata?.map((e) => {
               return (
                 <div
@@ -142,6 +175,32 @@ const Message = () => {
             </div>
           ) : (
             <div>
+              <div className="w-[100%] border-b-2 border-b-gray-300 py-[15px]">
+                <div className="w-[95%] m-auto ">
+                  <div className="flex justify-between w-[100%] m-auto  ">
+                    <div className="flex items-center w-[80%]">
+                      <img
+                        src={avatar}
+                        alt=""
+                        className="w-[50px] h-[50px] rounded-[50%]"
+                      />
+                      <div className="ml-[2%]">
+                        <h1 className="text-[16px] font-[600]">Adham</h1>
+                        {console.log(chattext)}
+                        <h1 className="text-[16px] font-[600]"></h1>
+                        <p className="text-[#A7B1BE] text-[14px] font-mono">
+                          Active
+                        </p>
+                      </div>
+                    </div>
+                    <div className="w-[15%] flex justify-between items-center">
+                      <CallIcon onClick={() => setCall(true)} />
+                      <VideocamOutlinedIcon onClick={() => setCall(true)} />
+                      <InfoOutlinedIcon onClick={() => setmodal(true)} />
+                    </div>
+                  </div>
+                </div>
+              </div>
               {chattext?.map((e) => {
                 if (e.userId == getToken().sid) {
                   return (
@@ -154,7 +213,7 @@ const Message = () => {
                   );
                 } else {
                   return (
-                    <div className="w-[100%] flex text-start items-center ">
+                    <div className="w-[100%] flex text-start items-center ml-[10px] ">
                       <img
                         src={
                           e.userPhoto === ""
@@ -164,8 +223,9 @@ const Message = () => {
                               }`
                         }
                         alt=""
-                        className="rounded-full h-[40px] w-[40px]"
+                        className="rounded-full h-[30px] w-[30px]"
                       />
+
                       <div className="card bg-[#F8FAFC] ml-[1%] text-end flex flex-wrap p-[8px] font-[600] rounded-[0px_10px_10px_10px] gap-2 text-[16px] text-[#475569] mt-[2%]">
                         {e.messageText}
                       </div>
@@ -174,6 +234,41 @@ const Message = () => {
                   );
                 }
               })}
+              <form
+                onSubmit={sendMessage}
+                className="w-[70%] fixed bottom-[10%] flex items-center m-auto h-[45px] border-2 border-gray-300  rounded-[10px]"
+              >
+                <SentimentSatisfiedAltOutlinedIcon
+                  sx={{ paddingLeft: 1, fontSize: 35 }}
+                />
+                <input
+                  type="text"
+                  className=" outline-none pl-[10px] py-2 mx-4 w-[80%]"
+                  value={message1}
+                  onChange={(event) => setMessage1(event.target.value)}
+                  placeholder="Write a message..."
+                />
+
+                {message1.trim().length > 0 ? (
+                  <div className="">
+                    <button
+                      type="submit"
+                      onClick={() => sendMessage()}
+                      className="text-[#15bdff] flex items-center ml-[15%] font-mono font-[700]"
+                    >
+                      Opublikovat{" "}
+                      <SendIcon sx={{ paddingLeft: 1, fontSize: 30 }} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="ml-[4%]">
+                    <MicNoneOutlinedIcon sx={{ fontSize: 27 }} />
+                    <InsertPhotoOutlinedIcon
+                      sx={{ paddingLeft: 1, fontSize: 35 }}
+                    />
+                  </div>
+                )}
+              </form>
             </div>
           )}
         </section>

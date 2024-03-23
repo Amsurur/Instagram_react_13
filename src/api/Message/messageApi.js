@@ -42,16 +42,22 @@ export const addchat = createAsyncThunk(
   }
 );
 
-export const deletchat = createAsyncThunk(
-  "todo/Data",
-  async (id, { dispatch }) => {
-    try {
-      const { data } = await axiosRequest.post(
-        `Chat/delete-chat?chatId=${id}`
-      );
-      dispatch(Data());
-    } catch (error) {
-      console.log(error);
-    }
+export const deleteChat = createAsyncThunk("message/deleteChat", async (id, { dispatch }) => {
+  try {
+    let { data } = await axiosRequest.delete(`Chat/delete-chat?chatId=${id}`);
+    dispatch(getUser())
+  } catch (error) {
+    console.error(error);
   }
-);
+})
+
+export const deleteMessage = createAsyncThunk("message/deleteMessage", async ({id,chatId}, { dispatch }) => {
+  console.log(id);
+  try {
+    let { data } = await axiosRequest.delete(`Chat/delete-message?massageId=${id}`);
+    dispatch(getMessage(chatId))
+  } catch (error) {
+    console.error(error);
+  }
+})
+
