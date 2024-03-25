@@ -36,9 +36,11 @@ body {
 
 .swiper-slide img {
   /* display: block; */
-  /* width: 100%;
-  height: 100%; */
-  /* object-fit: cover; */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 50;
 }
 
 .swiper {
@@ -70,12 +72,26 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 10px;
 }
 .swiper-button-next {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   background: white;
   border-radius: 50%;
+  font-size: 10px;
+}
+.swiper-button- {
+  font-size: 5px;
+}
+.swiper-button-next ::before {
+  font-size: 5px;
+}
+.next ::after {
+  font-size: 5px;
+}
+.next ::before {
+  font-size: 5px;
 }
 .bgGradient {
   background: rgba(195, 34, 82, 0.486) !important;

@@ -11,6 +11,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Layout } from "./Layout/Layout";
 import Registration from "./pages/Registration/Registration";
 import AuthCheck from "./utils/AuthChek";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 export const App = () => {
   const router = createBrowserRouter([
@@ -24,7 +25,11 @@ export const App = () => {
     },
     {
       path: "/basic",
-      element: <Layout />,
+      element: (
+        <ProtectedRoute>
+          <Layout />
+        </ProtectedRoute>
+      ),
       children: [
         {
           index: true,
