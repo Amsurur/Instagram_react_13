@@ -13,7 +13,7 @@ export const store = configureStore({
     message: counterSlice,
     post: postSlice,
     todo:searchSlice,
-                                        Home: Home,
+    Home: Home,
 
   },
 

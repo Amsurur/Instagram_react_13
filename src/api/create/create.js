@@ -3,22 +3,29 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import { axiosRequest } from '../../utils/axiosRequest';
+import { useState } from 'react';
 
 // const api  = import.meta.env.VITE_APP_API_URL
 
 
-export const addUser = createAsyncThunk("todo/addUser", async (obj, { dispatch }) => {
+
+
+export const addUser = createAsyncThunk("post/addUser", async (params, { dispatch }) => {
+    
+    const { title, content, files } = params
 
     let form = new FormData();
-    form.append("Title", obj.title)
-    form.append("Content", obj.content)
-    form.append("Images", obj.img)
-
+    form.append("Title", title)
+    form.append("Content", content)
+    
+    for(let i = 0 ; i < files.length; i++){
+      form.append("Images" , files[i])
+    }
 
     try {
+    
         const { data } = await axiosRequest.post(`Post/add-post`, form, 'Content-Type: multipart/form-data')
-        dispatch(getData())
-        
+        dispatch()
  
     }
     catch (error) {

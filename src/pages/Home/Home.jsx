@@ -197,7 +197,7 @@ const Home = () => {
 
   const [commetModal, setCommetModal] = useState(false);
 
-  console.log(commentPublic);
+  
   return (
     <>
       <div className="w-full flex justify-around mt-7">
