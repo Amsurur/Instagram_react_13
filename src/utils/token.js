@@ -17,6 +17,7 @@ function getToken() {
 
 function destroyToken() {
     localStorage.removeItem("access_token")
+    window.location.reload()
 }
 
 export {saveToken, destroyToken, getToken}
