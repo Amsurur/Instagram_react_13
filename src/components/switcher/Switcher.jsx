@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DarkModeSwitch } from "react-toggle-dark-mode";
+import { DarkModeSwitch, defaultProperties } from "react-toggle-dark-mode";
 import useDarkside from "../../hooks/usedarkside";
 
 function Switcher(){
@@ -13,8 +13,11 @@ function Switcher(){
         Setdarkside(checked)
     }
     return(
-        <div>
+        <div className="">
             <DarkModeSwitch
+            animationProperties={defaultProperties}
+            sunColor="gray"
+            moonColor="gray"
                 checked={darkside}
                 onChange={toggleDarkMode}
                 size={25}

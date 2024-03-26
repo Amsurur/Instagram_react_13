@@ -38,6 +38,7 @@
     "react-router-dom": "^6.19.0",
     "react-toggle-dark-mode": "^1.1.1",
     "redux-thunk": "^3.1.0",
+    "stories-react": "^1.1.2",
     "swiper": "^11.0.7"
   },
   "devDependencies": {
