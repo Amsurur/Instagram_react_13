@@ -5,7 +5,7 @@ import { axiosRequest } from "../../utils/axiosRequest";
 
 
 
-export const searchData=createAsyncThunk("todo/searchData",async (name)=>{
+export const searchData=createAsyncThunk("search/searchData",async (name)=>{
     try {
         const {data}=await axiosRequest.get(`User/get-users?UserName=${name}`)
    return data.data
@@ -14,7 +14,7 @@ export const searchData=createAsyncThunk("todo/searchData",async (name)=>{
     }
 })
 
-export const dellAll=createAsyncThunk("todo/dellAll",async (_,{dispatch})=>{
+export const dellAll=createAsyncThunk("search/dellAll",async (_,{dispatch})=>{
     try {
         const {data}=await axiosRequest.delete(`SearchHistory/delete-user-search-histories`)
   dispatch(getHistory())
@@ -25,7 +25,7 @@ export const dellAll=createAsyncThunk("todo/dellAll",async (_,{dispatch})=>{
 
 
 
-export const getHistory=createAsyncThunk("todo/getHistory",async()=>{
+export const getHistory=createAsyncThunk("search/getHistory",async()=>{
     try {
         const {data}=await axiosRequest.get(`SearchHistory/get-user-search-histories`)
     return data.data
@@ -33,7 +33,7 @@ export const getHistory=createAsyncThunk("todo/getHistory",async()=>{
         console.log(error);
     }
 })
-export const postSearch=createAsyncThunk("todo/postSearch",async(id,{dispatch})=>{
+export const postSearch=createAsyncThunk("search/postSearch",async(id,{dispatch})=>{
     try {
         const {data}=await axiosRequest.post(`SearchHistory/add-user-search-history?UserSearchId=${id}`)
 
@@ -42,7 +42,7 @@ dispatch(getHistory())
         console.log(error);
     }
 })
-export const delUser=createAsyncThunk("todo/delUser",async(id,{dispatch})=>{
+export const delUser=createAsyncThunk("search/delUser",async(id,{dispatch})=>{
     try {
         const {data}=await axiosRequest.delete(`SearchHistory/delete-user-search-history?id=${id}`)
      dispatch(getHistory())
@@ -52,7 +52,7 @@ export const delUser=createAsyncThunk("todo/delUser",async(id,{dispatch})=>{
 })
 
 export const searchSlice = createSlice({
-    name: 'todo',
+    name: 'search',
     initialState:{
   value:0,
   data:[],

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import "../App.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -15,7 +15,7 @@ import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import navMessages from "../assets/icons/nav-messages.svg";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
-import { Avatar, TextField } from "@mui/material";
+import { Avatar, Box, Modal, TextField, Typography } from "@mui/material";
 import navProfile from "../assets/images/nav-profile.jpg";
 
 import ClearIcon from "@mui/icons-material/Clear";
@@ -27,25 +27,65 @@ import "aos/dist/aos.css";
 import HomeIcon from "../icons/Layout/HomeIcon";
 import ReelsIcon from "../icons/Layout/ReelsIcon";
 import MessageIcon from "../icons/Layout/MessageIcon";
-import { getToken } from "../utils/token";
+import { destroyToken, getToken } from "../utils/token";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import SearchUser from "../components/SearchUser";
 
 import instLogo from "../pages/Login/instLogo.png";
 import insText from "../pages/Login/insText.png";
 import ModalPost from "../components/ModalPost";
+import LogOut from "../components/logOut/LogOut";
 
-
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 // Post Modal
 
+import LogoutIcon from "@mui/icons-material/Logout";
 
+import SettingsIcon from "@mui/icons-material/Settings";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
+import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
+import Switcher from "../components/switcher/Switcher";
 
+import HistoryToggleOffOutlinedIcon from "@mui/icons-material/HistoryToggleOffOutlined";
+const style = {
+  position: "fixed",
+  top: "50%",
+  left: "20%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  height: "100vh",
+  bgcolor: "background.paper",
+  border: "px solid #000",
+  boxShadow: 10,
+  p: 4,
+  overflow: "scroll",
+};
 
 export const Layout = () => {
-  // Функция для модального окна "Еще"
-  const [modal,setSearcModal]=useState(false)
+  const [modal, setSearcModal] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const handleOpen = () => setOpen1(true);
+  const handleClose1 = () => setOpen1(false);
 
+  const forclose = () => {
+    setSearcModal(false);
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   const location = useLocation();
   const dispatch = useDispatch();
   let [followingState, setFollowingState] = useState(false);
@@ -53,22 +93,20 @@ export const Layout = () => {
   // const myId = getToken().sid;
   // const myId = getToken().sid;
 
-
- 
-
   useEffect(() => {
     AOS.init();
   }, []);
 
   return (
     // Главный контейнер
-    <main className="flex dark:bg-[black] dark:text-white">
+    <main className="flex dark:bg-gray-950 dark:text-white">
       {/* Флекс контейнер */}
       {/* Navbar */}
       <aside
         className={`${
           location.pathname === "/basic/message" ||
-          location.pathname === "/basic/message/newMessage"|| modal  
+          location.pathname === "/basic/message/newMessage" ||
+          modal
             ? "w-[6%]"
             : "w-[19%]"
         }`}
@@ -77,14 +115,15 @@ export const Layout = () => {
         <div
           className={`${
             location.pathname === "/basic/message" ||
-            location.pathname === "/basic/message/newMessage"|| modal 
+            location.pathname === "/basic/message/newMessage" ||
+            modal
               ? "w-[6%]"
               : "w-[18.91%]"
           } panel-navigation fixed py-[33px] px-[15px] h-[100%] border-r-[1px] border-[#d8d8d8]`}
         >
           <ul
             className={`${
-              "modalSearch" ? "items-start gap-[16.5px]" : "items-stretch"
+              "modalSearch" ? "items-start gap-[15px]" : "items-stretch"
             } flex flex-col gap-[12px]`}
           >
             {/* Logo */}
@@ -92,7 +131,8 @@ export const Layout = () => {
               <li
                 className={`${
                   location.pathname === "/basic/message" ||
-                  location.pathname === "/basic/message/newMessage"|| modal 
+                  location.pathname === "/basic/message/newMessage" ||
+                  modal
                     ? "hidden"
                     : "block"
                 }mb-[15px]`}
@@ -115,7 +155,9 @@ export const Layout = () => {
                 <img
                   className={`h-[40px] w-[55%] ${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"|| modal 
+                    location.pathname === "/basic/message/newMessage" ||
+                    modal ||
+                    open1
                       ? "hidden"
                       : "block"
                   }`}
@@ -125,6 +167,7 @@ export const Layout = () => {
               </li>
             </Link>
             <NavLink
+              onClick={() => setSearcModal(false)}
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
               }
@@ -137,7 +180,9 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage" || modal 
+                    location.pathname === "/basic/message/newMessage" ||
+                    modal ||
+                    open1
                       ? "hidden"
                       : "block"
                   }`}
@@ -147,62 +192,63 @@ export const Layout = () => {
               </li>
             </NavLink>
 
- {/* <search/> */}
-{
-  modal?(
-    <NavLink onClick={()=>setSearcModal(false)}
-            
-    className={
-      "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
-    }
-  >
-    {/* <search/> */}
-    <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
-      <FontAwesomeIcon
-        icon={faMagnifyingGlass}
-        className="text-[22px]"
-      />
+            {/* <search/> */}
+            {modal ? (
+              <NavLink
+                onClick={() => setSearcModal(false)}
+                className={
+                  "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+                }
+              >
+                <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
+                  <FontAwesomeIcon
+                    icon={faMagnifyingGlass}
+                    className="text-[22px]"
+                  />
 
-      <p
-        className={`${
-          location.pathname === "/basic/message" ||
-          location.pathname === "/basic/message/newMessage"|| modal 
-            ? "hidden"
-            : "block"
-        }`}
-      >
-        Поисковой запрос
-      </p>
-    </li>
-  </NavLink>
-  ):(
-    <NavLink onClick={()=>setSearcModal(true)}
-            
-    className={
-      "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
-    }
-  >
-   
-    <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
-      <FontAwesomeIcon
-        icon={faMagnifyingGlass}
-        className="text-[22px]"
-      />
+                  <p
+                    className={`${
+                      location.pathname === "/basic/message" ||
+                      location.pathname === "/basic/message/newMessage" ||
+                      modal ||
+                      open1
+                        ? "hidden"
+                        : "block"
+                    }`}
+                  >
+                    Поисковой запрос
+                  </p>
+                </li>
+              </NavLink>
+            ) : (
+              <NavLink
+                onClick={() => setSearcModal(true)}
+                className={
+                  "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
+                }
+              >
+                <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
+                  <FontAwesomeIcon
+                    icon={faMagnifyingGlass}
+                    className="text-[22px]"
+                  />
 
-      <p
-        className={`${
-          location.pathname === "/basic/message" ||
-          location.pathname === "/basic/message/newMessage"|| modal 
-            ? "hidden"
-            : "block"
-        }`}
-      >
-        Поисковой запрос
-      </p>
-    </li>
-  </NavLink>
-  )
-}
+                  <p
+                    className={`${
+                      location.pathname === "/basic/message" ||
+                      location.pathname === "/basic/message/newMessage" ||
+                      modal ||
+                      open1
+                        ? "hidden"
+                        : "block"
+                    }`}
+                  >
+                    Поисковой запрос
+                  </p>
+                </li>
+              </NavLink>
+            )}
+
             {/* <NavLink onClick={()=>setSearcModal(true)}
             
               className={
@@ -210,7 +256,7 @@ export const Layout = () => {
               }
             >
               {/* <search/> */}
-              {/* <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
+            {/* <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px]  rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer">
                 <FontAwesomeIcon
                   icon={faMagnifyingGlass}
                   className="text-[22px]"
@@ -231,6 +277,7 @@ export const Layout = () => {
 
             <NavLink
               to="explore"
+              onClick={() => setSearcModal(false)}
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
               }
@@ -240,7 +287,9 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"|| modal 
+                    location.pathname === "/basic/message/newMessage" ||
+                    modal ||
+                    open1
                       ? "hidden"
                       : "block"
                   }`}
@@ -251,6 +300,7 @@ export const Layout = () => {
             </NavLink>
             <NavLink
               to="reels"
+              onClick={() => setSearcModal(false)}
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
               }
@@ -261,7 +311,9 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"|| modal 
+                    location.pathname === "/basic/message/newMessage" ||
+                    modal ||
+                    open1
                       ? "hidden"
                       : "block"
                   }`}
@@ -271,6 +323,7 @@ export const Layout = () => {
               </li>
             </NavLink>
             <NavLink
+              onClick={() => setSearcModal(false)}
               to="message"
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
@@ -282,7 +335,9 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"|| modal 
+                    location.pathname === "/basic/message/newMessage" ||
+                    modal ||
+                    open1
                       ? "hidden"
                       : "block"
                   }`}
@@ -292,6 +347,9 @@ export const Layout = () => {
               </li>
             </NavLink>
             <NavLink
+              onClick={() => {
+                setSearcModal(false), handleOpen();
+              }}
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
               }
@@ -301,7 +359,9 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"|| modal 
+                    location.pathname === "/basic/message/newMessage" ||
+                    modal ||
+                    open1
                       ? "hidden"
                       : "block"
                   }`}
@@ -309,12 +369,12 @@ export const Layout = () => {
                   Уведомления
                 </p>
               </li>
-              
             </NavLink>
-            <ModalPost/>
+            <ModalPost />
 
             <NavLink
               to="profile"
+              onClick={() => setSearcModal(false)}
               className={
                 "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
               }
@@ -327,7 +387,9 @@ export const Layout = () => {
                 <p
                   className={`${
                     location.pathname === "/basic/message" ||
-                    location.pathname === "/basic/message/newMessage"|| modal 
+                    location.pathname === "/basic/message/newMessage" ||
+                    modal ||
+                    open1
                       ? "hidden"
                       : "block"
                   }`}
@@ -336,14 +398,20 @@ export const Layout = () => {
                 </p>
               </li>
             </NavLink>
+
             <li
+              onClick={() => {
+                setSearcModal(false), handleClickOpen();
+              }}
               className="flex items-center gap-[15px] hover:bg-[#00000010] rounded-[7px] p-[10px] transition-all duration-300 cursor-pointer"
             >
               <FontAwesomeIcon icon={faBars} className="text-[20px]" />
               <p
                 className={`${
                   location.pathname === "/basic/message" ||
-                  location.pathname === "/basic/message/newMessage"|| modal 
+                  location.pathname === "/basic/message/newMessage" ||
+                  modal ||
+                  open1
                     ? "hidden"
                     : "block"
                 }`}
@@ -358,12 +426,8 @@ export const Layout = () => {
         {/* Modal Create */}
       </aside>
       {/* searchmodal  */}
-                {modal?(
-                  <SearchUser/>
-                ):null
 
-                }
-      <div></div>
+      {modal ? <SearchUser onCloseModal={setSearcModal} /> : null}
 
       {/* Контентная часть */}
       <aside
@@ -373,20 +437,81 @@ export const Layout = () => {
             : "flex justify-center "
         } w-[100%]`}
       >
+        <Modal
+          open={open1}
+          onClose={handleClose1}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h5" component="h6">
+              Уведомления
+            </Typography>
+            На этой неделе
+            <p></p>
+            <Typography
+              id="modal-modal-description"
+              sx={{ mt: 2 }}
+            ></Typography>
+          </Box>
+        </Modal>
+            
+        
+        {/* <div className=''> */}
+        {/* <button onClick={()=> destroyToken()}>Logout</button> */}
+        <Dialog
+          className=" mt-[17vh] h-full  pr-[76%]"
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          // fullWidth={true}
+          // maxWidth="lg"
+        >
+          <DialogTitle id="alert-dialog-title">{""}</DialogTitle>
 
+          <DialogContent>
+            <DialogContentText
+              className=" w-[210px] text-center"
+              id="alert-dialog-description"
+            >
+              <div className="flex flex-col gap-[25px]   text-black">
+                <div className="flex items-center gap-[10px] ">
+                  <SettingsOutlinedIcon />
+                  <h1 className="text-[19px] ">Настройки</h1>
+                </div>
+                <div className="flex gap-[10px] items-center">
+                  <BookmarkBorderRoundedIcon />
+                  <h2 className="text-[18px] ">Ваши cохраненное</h2>
+                </div>
+                <div className="flex gap-[10px]">
+                  <HistoryToggleOffOutlinedIcon />
+                  <h2 className="text-[18px]">Ваши действия</h2>
+                </div>
+                <div className="flex gap-[10px] items-center">
+                  <Switcher />
 
- 
-
-
-
-
-
+                  <h2 className="text-[18px] ">Ночной режим</h2>
+                </div>
+                <div
+                  onClick={() => destroyToken()}
+                  className="flex items-center gap-[10px]"
+                >
+                  <LogoutIcon color="error" />
+                  <h2 className="text-[17px] text-red-600">Выйти</h2>
+                </div>
+              </div>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}></Button>
+            <Button onClick={handleClose}></Button>
+          </DialogActions>
+        </Dialog>
+        {/* </div> */}
 
         <Outlet />
         {/* Футер */}
-
-
-        
 
         {/* <footer  className="py-[10px]">
   

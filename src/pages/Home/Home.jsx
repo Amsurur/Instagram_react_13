@@ -125,7 +125,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="w-full flex justify-around mt-7">
+      <div className="w-full flex justify-around  mt-7">
         <div className="w-[570px]   ">
           <div className=" w-[100%] h-[110px] m-auto flex items-center bg-transparent relative z-0">
             <Swiper
@@ -162,6 +162,7 @@ const Home = () => {
                   Your story
                 </p>
               </SwiperSlide> */}
+
               {getStoriesData?.stories
                 ?.filter((e) => {
                   return e.fileName != null;

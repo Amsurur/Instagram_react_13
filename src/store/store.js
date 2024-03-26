@@ -13,9 +13,11 @@ export const store = configureStore({
     message: counterSlice,
     Home: Home,
     post: postSlice,
-    todo: searchSlice,
+
+    search:searchSlice,
     Home: Home,
 
     explore: Explore,
+
   },
 });
