@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import arrow from "../../assets/message/Vector.svg";
 import avatar from "../../assets/message/avatar.png";
 import messageicon from "../../assets/message/free-icon-messenger-1384074 1.svg";
-import { Box, Button, FormControlLabel, Modal, Switch } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  Menu,
+  Modal,
+  Switch,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -12,6 +19,8 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 
 import {
@@ -125,6 +134,7 @@ const Message = () => {
   const [messageidx, setMessageidx] = useState(null);
   const [chatIdx, setChatIdx] = useState(null);
   const [chatIdx2, setChatIdx2] = useState(null);
+  const [open4, setOpen4] = useState(null);
   const [modal, setmodal] = useState(false);
   const [call, setCall] = useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -133,12 +143,41 @@ const Message = () => {
   const [name, setName] = useState(null);
   const [avatar1, setAvatar1] = useState(null);
   const [messageId, setMessageId] = useState(null);
+  const [liked, setLiked] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [like, setLike] = useState([]);
 
-  let data = useSelector((state) => state.message.data);
-  let chatdata = useSelector((state) => state.message.data1);
-  let chattext = useSelector((state) => state.message.data2);
+  let data = useSelector((state1) => state1.message.data);
+  let chatdata = useSelector((state1) => state1.message.data1);
+  let chattext = useSelector((state1) => state1.message.data2);
 
-  let a = false;
+  const handleDoubleClick = () => {
+    setLiked(!liked);
+    setChatIdx2(e.messageId);
+  };
+  const [anchorEl, setAnchorEl] = useState(false);
+  const open5 = Boolean(anchorEl);
+  const handleClick5 = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose5 = () => {
+    setAnchorEl(false);
+  };
+
+  const handleCopy = () => {
+    const textToCopy = chatIdx;
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch((err) => console.error("Error copying text: ", err));
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 3600);
+  };
 
   let dispatch = useDispatch();
 
@@ -149,7 +188,9 @@ const Message = () => {
     setOpen(false);
   };
   const handleOpen1 = () => setOpen1(true);
+  const handleOpen4 = () => setOpen4(true);
   const handleClose1 = () => setOpen1(false);
+  const handleClose4 = () => setOpen4(false);
   const handleOpen2 = () => setOpen2(true);
   const handleClose2 = () => {
     setOpen2(false);
@@ -172,6 +213,7 @@ const Message = () => {
       console.log(error);
     }
   }
+
   let ADHAM = getToken();
   console.log(ADHAM);
   useEffect(() => {
@@ -305,7 +347,7 @@ const Message = () => {
                   </div>
                 </div>
               </div>
-              <div className="overflow-y-scroll h-[750px]">
+              <div className="overflow-y-scroll h-[80vh]">
                 {chattext?.map((e) => {
                   console.log(chattext, e.messageId);
                   if (e.userId == getToken().sid) {
@@ -316,14 +358,50 @@ const Message = () => {
                             handleOpen1(),
                               setMessageidx(e.messageId),
                               setidx1(e.chatId);
+                            setChatIdx(e.messageText);
                           }}
-                          className="card1 font-[700] text-[#A7B1BE] mt-[5px] pr-[5px] rounded-[50px] text-[20px] "
+                          className="card1 font-[700] text-[#A7B1BE] mt-[1%] pr-[5px] rounded-[50px] text-[20px] mx-1  "
                         >
                           ...
                         </p>
-                        <div className=""></div>
-                        <div className="card bg-blue-500 text-end flex flex-wrap p-[8px] font-[600] mr-[1%] rounded-[10px_10px_0px_10px] gap-2 text-[16px] text-[white] mt-[2%]">
-                          {e.messageText}
+
+                        <div
+                          className={`cursor-pointer card bg-blue-500 text-end flex flex-wrap p-[8px] font-[600] mr-[1%] rounded-[10px_10px_0px_10px] gap-2 text-[16px] text-[white] mt-[2%]`}
+                          onDoubleClick={() => {
+                            setLike(like.length == 0 ? [e.messageId] : []);
+                            handleDoubleClick();
+                          }}
+                        >
+                          <p className=" flex   flex-row-reverse">
+                            {e.messageText}
+                            <span className=" -mr-[5%] relative top-6">
+                              {like.map((likeId, index) => {
+                                if (likeId === e.messageId) {
+                                  return (
+                                    <p className=" bg-gray-300 h-[20px] py-1  w-[30px] px-2 rounded-xl">
+                                      <svg
+                                        key={index}
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="14"
+                                        height="14"
+                                        color="red"
+                                        fill="currentColor"
+                                        className="bi bi-heart-fill"
+                                        viewBox="0 0 16 16"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                                        />
+                                      </svg>
+                                    </p>
+                                  );
+                                } else {
+                                  return null;
+                                }
+                              })}
+                            </span>
+                          </p>
                         </div>
                       </div>
                     );
@@ -342,16 +420,52 @@ const Message = () => {
                           className="rounded-full h-[30px] w-[30px]"
                         />
 
-                        <div className="card bg-[#F8FAFC] ml-[1%] text-end flex flex-wrap p-[8px] font-[600] rounded-[0px_10px_10px_10px] gap-2 text-[16px] text-[#475569] mt-[2%]">
-                          {e.messageText}
+                        <div
+                          onDoubleClick={() => {
+                            setLike(like.length == 0 ? [e.messageId] : []);
+                            handleDoubleClick();
+                          }}
+                          className="card bg-[#eceff2] ml-[1%] text-end flex flex-wrap p-[8px] font-[600] rounded-[0px_10px_10px_10px] gap-2 text-[16px] text-[#475569] mt-[2%]"
+                        >
+                          <p className="flex">
+                            {e.messageText}
+                            <span className=" -ml-[5%] relative top-6">
+                              {like.map((likeId, index) => {
+                                if (likeId === e.messageId) {
+                                  return (
+                                    <p className=" bg-gray-300 h-[25px] py-1 border-white border-[3px]  w-[35px] px-2 rounded-xl">
+                                      <svg
+                                        key={index}
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="14"
+                                        height="14"
+                                        color="red"
+                                        fill="currentColor"
+                                        className="bi bi-heart-fill"
+                                        viewBox="0 0 16 16"
+                                      >
+                                        <path
+                                          fillRule="evenodd"
+                                          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                                        />
+                                      </svg>
+                                    </p>
+                                  );
+                                } else {
+                                  return null;
+                                }
+                              })}
+                            </span>
+                          </p>
                         </div>
                         <p
                           onClick={() => {
-                            handleOpen1(),
+                            handleOpen4(),
                               setMessageidx(e.messageId),
-                              setidx1(e.chatId);
+                              setidx1(e.chatId),
+                              setChatIdx(e.messageText);
                           }}
-                          className="card1 font-[700] text-[#A7B1BE] mt-[5px] pr-[5px] rounded-[50px] text-[20px] "
+                          className="card1 font-[700] text-[#A7B1BE] mt-[1%] pr-[5px] rounded-[50px] text-[20px] mx-1 "
                         >
                           ...
                         </p>
@@ -367,6 +481,7 @@ const Message = () => {
                   className="w-[95%]   pl-[2%] flex items-center m-auto border-2  rounded-[50px]"
                 >
                   <SentimentSatisfiedAltOutlinedIcon
+                    onClick={handleClick5}
                     sx={{ paddingLeft: 1, fontSize: 35 }}
                   />
                   <input
@@ -480,6 +595,49 @@ const Message = () => {
           </Button>
         </DialogActions>
       </BootstrapDialog>
+
+      <Modal
+        open={open4}
+        onClose={handleClose4}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style1}>
+          <div className="w-[100%]">
+            <p className="  flex text-[18px] mt-[4%] pt-[5px] border-t">
+              Send Message
+              <p className=" -rotate-12">
+                {" "}
+                <SendIcon
+                  sx={{
+                    paddingLeft: 1,
+                    fontSize: 30,
+                    color: blue[300],
+                  }}
+                />
+              </p>
+            </p>
+            <p className="  flex border-t text-[18px] mt-[4%] pt-[5px]">
+              <button onClick={handleCopy}>Copy</button>
+              {copied && (
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    color="green"
+                    fill="currentColor"
+                    class="bi bi-check"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                  </svg>
+                </span>
+              )}
+            </p>
+          </div>
+        </Box>
+      </Modal>
       <Modal
         open={open1}
         onClose={handleClose1}
@@ -502,16 +660,22 @@ const Message = () => {
               </p>
             </p>
             <p className="  flex border-t text-[18px] mt-[4%] pt-[5px]">
-              Copy{" "}
-              <p>
-                <ContentCopyIcon
-                  sx={{
-                    marginLeft: 1,
-                    fontSize: 25,
-                    color: green[300],
-                  }}
-                />
-              </p>
+              <button onClick={handleCopy}>Copy</button>
+              {copied && (
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    color="green"
+                    height="24"
+                    fill="currentColor"
+                    class="bi bi-check"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z" />
+                  </svg>
+                </span>
+              )}
             </p>
           </div>
           <div className="w-[100%]">
@@ -541,11 +705,6 @@ const Message = () => {
         <Box sx={style}>
           <div className="text-center px-[40px] py-[25px]">
             <p className="text-[21px] mb-[5px]">Delete chat forever?</p>
-            {/* <p className="text-[grey]">
-            You will not be able to undo this action. If you clear history
-              search, the accounts you searched for may still
-              appear in recommended results.
-            </p> */}
           </div>
           <button
             onClick={() => {
@@ -565,6 +724,204 @@ const Message = () => {
           </button>
         </Box>
       </Modal>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open5}
+        onClose={handleClose5}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <div className="w-[300px] h-[100px] ">
+          <div className=" h-[30px] flex">
+            <p
+              onClick={() => setMessage1(message1 + "😂")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😂
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😳")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😳
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😒")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😒
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😔")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😔
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😃")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😃
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😡")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😡
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😏")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😏
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "🙈")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              🙈
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😘")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😘
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "👍")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              👍
+            </p>
+          </div>
+          <div className="h-[30px] flex">
+            <p
+              onClick={() => setMessage1(message1 + "😞")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😞
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😱")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😱
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😝")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😝
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😢")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😢
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😉")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😉
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "❤")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              ❤
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😍")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😍
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😊")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😊
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😁")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😁
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😄")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😄
+            </p>
+          </div>
+          <div className="h-[30px] flex">
+            <p
+              onClick={() => setMessage1(message1 + "💕")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              💕
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "🤦‍♂️")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              🤦‍♂️
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "🥶")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              🥶
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "🤑")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              🤑
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "🤯")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              🤯
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "🤭")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              🤭
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "😴")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              😴
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "🤒")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              🤒
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "🐊")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              🐊
+            </p>
+            <p
+              onClick={() => setMessage1(message1 + "🙄")}
+              className="w-[30px] h-[30px] hover:bg-[#80808029] cursor-pointer flex items-center justify-center rounded"
+            >
+              🙄
+            </p>
+          </div>
+        </div>
+      </Menu>
 
       {modal ? (
         <div className=" overflow-hidden   font-mono">
@@ -595,11 +952,29 @@ const Message = () => {
               </div>
             </div>
             <div className="w-[90%] m-auto mt-[7%]">
-              <p className="font-[700] text-[18px] font-mono mb-[2%] ">Users</p>
+              <p className="font-[700] text-[20px] font-mono mb-[2%] ">Users</p>
               <div className="flex items-center w-[80%] mt-[5%]">
                 <div className="ml-[2%]">
-                  <p className="text-[16px] font-[600]"></p>
-                  <p className="text-[#A7B1BE] text-[14px] font-mono">Active</p>
+                  <div className=" items-center w-[100%]">
+                    <img
+                      src={
+                        avatar1 === ""
+                          ? avatar
+                          : `${import.meta.env.VITE_APP_FILES_URL}${avatar1}`
+                      }
+                      alt=""
+                      className="w-[80px] h-[80px] rounded-[50%]"
+                    />
+                    <div className="ml-[2%]">
+                      <p className="text-[24px] font-[600] pt-[20px]">{name}</p>
+
+                      <p className="text-[16px] font-[600]"></p>
+                    </div>
+                  </div>
+
+                  <p className="text-[#A7B1BE] pt-[20px] text-[14px] font-mono">
+                    Active one minute ago
+                  </p>
                 </div>
               </div>
             </div>
