@@ -20,6 +20,7 @@ import {
   getUsers,
   likeReel,
   postComment,
+  postFolow,
 } from "../../api/reels/Reels";
 import { IconButton } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
@@ -49,9 +50,12 @@ const Reels = () => {
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
-
+  const [pod, setpod] = useState(false);
+  const followToggle = () => {
+    setpod(!pod);
+  };
   let data = useSelector((state) => state.reels.data);
-  // console.log(data);
+  console.log(data);
   const comments = useSelector((state) => state.reels.setComment);
   // console.log("data is", data);
   useEffect(() => {
@@ -186,8 +190,14 @@ const Reels = () => {
                       alt="user"
                     />
                     <h1 className="text-[white]">Terry Lucas</h1>
-                    <button className="pl-[10px] hover:bg-[gray]  hover:text-[white] text-[white] pr-[10px] pt-[3px] pb-[3px] rounded-2xl border-[2px] border-[white]">
-                      follow
+                    <button
+                     
+                      onClick={() => {
+                        followToggle(), dispatch(postFolow(elem.userId));
+                      }}
+                      className="pl-[10px] hover:bg-[gray]  hover:text-[white] text-[white] pr-[10px] pt-[3px] pb-[3px] rounded-2xl border-[2px] border-[white]"
+                    >
+                      {pod ? "Follow" : "Following"}
                     </button>
                   </div>
                   <p className="text-[17px] text-[white] pt-[10px]">
@@ -221,11 +231,11 @@ const Reels = () => {
                 </h1>
               </div>
               <div className="w-[300px] h-[300px]">
-                <div className="h-[230px] w-[270px] m-auto bg-red-600 overflow-x-hidden">
+                <div className="h-[230px] w-[270px] m-autooverflow-x-hidden">
                   {byId?.comments?.map((el) => {
                     return (
                       <>
-                        <div className="h-[50px] bg-purple-800 my-3 flex items-center">
+                        <div className="h-[50px]  my-3 flex items-center">
                           <div className="w-[40px] h-[40px] rounded-full border">
                             {users?.map((item) => {
                               if (item.id == el.userId) {
@@ -278,7 +288,17 @@ const Reels = () => {
                     onChange={(ev) => setCommentInput(ev.target.value)}
                   />
                   {commentInput == "" ? null : (
-                    <h1 onClick={() => { setCommentInput(""); dispatch(AddComent({ com: commentInput, id: byId.postId }));}} className="text-blue-400 cursor-pointer">Sent</h1>
+                    <h1
+                      onClick={() => {
+                        setCommentInput("");
+                        dispatch(
+                          AddComent({ com: commentInput, id: byId.postId })
+                        );
+                      }}
+                      className="text-blue-400 cursor-pointer"
+                    >
+                      Sent
+                    </h1>
                   )}
                   <button>
                     <SentimentSatisfiedAltIcon />

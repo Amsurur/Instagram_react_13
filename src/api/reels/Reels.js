@@ -67,6 +67,19 @@ export const addPostFavorite = createAsyncThunk(
     }
   }
 );
+export const postFolow = createAsyncThunk(
+  "reels/postFolow",
+  async (id, { dispatch }) => {
+    try {
+      let { data } = await axiosRequest.post(
+        `FollowingRelationShip/add-following-relation-ship?followingUserId=${id}`
+      );
+      dispatch(getReels());
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
 
 export const likeReel = createAsyncThunk(
   "reels/likeReel",
