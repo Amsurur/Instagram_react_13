@@ -221,11 +221,11 @@ const Reels = () => {
                 </h1>
               </div>
               <div className="w-[300px] h-[300px]">
-                <div className="h-[230px] w-[270px] m-auto overflow-x-hidden">
+                <div className="h-[230px] w-[270px] m-auto bg-red-600 overflow-x-hidden">
                   {byId?.comments?.map((el) => {
                     return (
                       <>
-                        <div className="h-[50px]  my-3 flex items-center">
+                        <div className="h-[50px] bg-purple-800 my-3 flex items-center">
                           <div className="w-[40px] h-[40px] rounded-full border">
                             {users?.map((item) => {
                               if (item.id == el.userId) {
