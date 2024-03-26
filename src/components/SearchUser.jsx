@@ -42,12 +42,12 @@ const SearchUser = ({ onCloseModal }) => {
             onCloseModal(false);
           }
         }}
-        className="w-full h-full fixed ml-[6%]"
+        className="w-full h-full fixed  ml-[6%]"
       >
         <div
           data-aos="fade-right"
           data-aos-duration="800"
-          className="searchModal  dark:bg-gray-950 dark:text-gray-100 p-[22px] fixed  w-[390px] bg-white z-9999  "
+          className="searchModal  dark:bg-gray-950 dark:text-gray-100 p-[22px] fixed  w-[390px] bg-white   "
         >
           <div className="flex justify-between items-center mb-[6vh] mt-[1vh]">
             <h1 className="text-[24px] ">Поисковый запрос</h1>

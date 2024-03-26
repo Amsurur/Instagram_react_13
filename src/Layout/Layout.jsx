@@ -77,9 +77,6 @@ export const Layout = () => {
     setSearcModal(false);
   };
 
-
-
-
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -195,7 +192,7 @@ export const Layout = () => {
               </li>
             </NavLink>
 
-            {/* <search/> */} 
+            {/* <search/> */}
             {modal ? (
               <NavLink
                 onClick={() => setSearcModal(false)}
@@ -251,7 +248,7 @@ export const Layout = () => {
                 </li>
               </NavLink>
             )}
-            
+
             {/* <NavLink onClick={()=>setSearcModal(true)}
             
               className={
@@ -452,12 +449,14 @@ export const Layout = () => {
             </Typography>
             На этой неделе
             <p></p>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
+            <Typography
+              id="modal-modal-description"
+              sx={{ mt: 2 }}
+            ></Typography>
           </Box>
         </Modal>
-
+            
+        
         {/* <div className=''> */}
         {/* <button onClick={()=> destroyToken()}>Logout</button> */}
         <Dialog
