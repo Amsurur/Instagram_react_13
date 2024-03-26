@@ -4,13 +4,23 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import SendIcon from "@mui/icons-material/Send";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import "swiper/css";
 import "swiper/css/pagination";
 import "./styles.css";
 import { Pagination } from "swiper/modules";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { getReels, likeReel, postComment } from "../../api/reels/Reels";
+import {
+  AddComent,
+  addPostFavorite,
+  getPostById,
+  getReels,
+  getUsers,
+  likeReel,
+  postComment,
+} from "../../api/reels/Reels";
 import { IconButton } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 
@@ -25,54 +35,54 @@ import DialogTitle from "@mui/material/DialogTitle";
 import CloseIcon from "@mui/icons-material/Close";
 import AddReactionIcon from "@mui/icons-material/AddReaction";
 import { setComment } from "../../reducers/reels/Reelse";
+import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 
 const Reels = () => {
-  const Byid = useSelector((state) => state.reels.Byid);
-  let data = useSelector((state) => state.reels.data);
-  const comments = useSelector((state) => state.reels.setComment);
-  console.log("data is", data);
   const dispatch = useDispatch();
+
+  const byId = useSelector((state) => state.reels.byId);
+  useEffect(() => {
+    dispatch(getPostById());
+  }, [dispatch]);
+
+  const users = useSelector((state) => state.reels.users);
+  useEffect(() => {
+    dispatch(getUsers());
+  }, [dispatch]);
+
+  let data = useSelector((state) => state.reels.data);
+  // console.log(data);
+  const comments = useSelector((state) => state.reels.setComment);
+  // console.log("data is", data);
   useEffect(() => {
     dispatch(getReels());
-  }, []);
+  }, [dispatch]);
   let imageApi = import.meta.env.VITE_APP_FILES_URL;
 
   const [one, setOne] = useState(false);
-  const handleScroll = () => {
-    console.log("scrolling is True");
-  };
+  let [idx, setIdx] = useState(null);
 
   const likedId = (id, el) => {
-    console.log("post-like", el);
+    // console.log("post-like", el);
     dispatch(likeReel(id, el));
-    console.log(data, "state.reels.data");
+    // console.log(data, "state.reels.data");
   };
 
   const unLikedId = (id, el) => {
-    console.log("post-like", el);
+    // console.log("post-like", el);
     dispatch(likeReel(id, el));
-    console.log(data, "state.reels.data");
+    // console.log(data, "state.reels.data");
   };
 
-  // function of Modal
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  let [commentModal, setCommentModal] = useState(false);
+  const [commentInput, setCommentInput] = useState("");
+  let com = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
   return (
     <>
       <div className="p-[20px]">
-        <div
-          onScroll={() => handleScroll()}
-          className="w-[600px] h-[660px] m-[auto]  overflow-y-auto p-[20px] overflow-x-hidden"
-        >
-          {data.map((elem) => {
+        <div className="w-[600px] h-[660px] m-[auto]  overflow-y-auto p-[20px] overflow-x-hidden">
+          {data?.map((elem) => {
             return (
               <div className="w-[90%] m-[auto] mt-[20px] ">
                 <video controls muted autoPlay loop>
@@ -112,7 +122,11 @@ const Reels = () => {
                     <span>{elem.postLikeCount}</span>
                   </h1>
                   <CommentIcon
-                    onClick={() => handleClickOpen()}
+                    onClick={() => {
+                      setCommentModal(true);
+                      console.log(elem.postId);
+                      dispatch(getPostById(elem.postId));
+                    }}
                     sx={{
                       color: "white",
                       display: "block",
@@ -132,6 +146,37 @@ const Reels = () => {
                       cursor: "pointer",
                     }}
                   />
+                  {elem.postFavorite ? (
+                    <BookmarkIcon
+                      onClick={() => {
+                        dispatch(addPostFavorite(elem.postId));
+                      }}
+                      sx={{
+                        color: "white",
+                        display: "block",
+                        marginTop: "20px",
+                        width: "35px",
+                        height: "35px",
+                        cursor: "pointer",
+                        zIndex: "50",
+                      }}
+                    />
+                  ) : (
+                    <BookmarkBorderIcon
+                      onClick={() => {
+                        dispatch(addPostFavorite(elem.postId));
+                      }}
+                      sx={{
+                        color: "white",
+                        display: "block",
+                        marginTop: "20px",
+                        width: "35px",
+                        height: "35px",
+                        cursor: "pointer",
+                        zIndex: "50",
+                      }}
+                    />
+                  )}
                 </div>
                 <div className="relative bottom-[330px] p-[10px]  ml-[10px]">
                   <div className="flex items-center w-[300px]  gap-[20px] ">
@@ -152,7 +197,98 @@ const Reels = () => {
               </div>
             );
           })}
-          <Dialog
+          {/* coment */}
+
+          <React.Fragment>
+            <Dialog
+              open={commentModal}
+              onClose={() => setCommentModal(false)}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              sx={{ ml: "1070px" }}
+              maxWidth="none"
+              bg
+            >
+              <div className="flex justify-around">
+                <button
+                  onClick={() => setCommentModal(false)}
+                  className="w-[50px] h-[50px] font-bold"
+                >
+                  X
+                </button>
+                <h1 className="w-[220px] bg--500 h-[50px] flex items-center justify-start cursor-pointer ">
+                  Comments
+                </h1>
+              </div>
+              <div className="w-[300px] h-[300px]">
+                <div className="h-[230px] w-[270px] m-auto overflow-x-hidden">
+                  {byId?.comments?.map((el) => {
+                    return (
+                      <>
+                        <div className="h-[50px]  my-3 flex items-center">
+                          <div className="w-[40px] h-[40px] rounded-full border">
+                            {users?.map((item) => {
+                              if (item.id == el.userId) {
+                                return (
+                                  <>
+                                    {item.avatar == "" ? (
+                                      <img
+                                        src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEg8QEhAPFRUQFRAWDxUVDw8PFRcVFRUWFhUVFxUYHSggGBolHRUVITEhJSkrLi4uFx8zODMsNygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAbAAEBAAMBAQEAAAAAAAAAAAAAAQIFBgQHA//EAD4QAAIBAgEJBQYDBgcBAAAAAAABAgMRMQQFBhIhUXGBkRMiQWHBMkJSobHRI3LwgpKissLxJDNDYnPh4jT/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A3ouCAUEAFBABWwQAUXIAKCACggAoRABQQAUEKABABQQAUXIAKCACkAApCkAAqIBbkAAAFAgAAAAAUEAAAAAVgQAAAAABSAAAABSAAABQgQAAAABbACAAAAAP2ybJpzerCMpPclfru5m5zHo7KrapUvGGMVhKX2Xn/c7DJcmhTjqwiorcl9d4HIZLonWltnKEPLbN9Fs+ZsaeiFP3qtR8FGP1TOkAHOT0QpeFWquOo/RHgyrRKovYqQl5NOD9Udi2RAfNMryOpSdpwlHddbHweDPOfUqtKMk4yipJ4ppNHKZ70Z1b1KF2sZQxa/Lv4AcwAABQQAAAABWBGAAAAAApAAAAAAAAAB0GjGZu1fa1F3Ivur4mvRfM0+QZK6tSFNYzduC8X02n0nJ6EYRjCKsopJLyQH6AAACXKBGigAACNgcrpVmZbcoprzqxX869eu85U+pat9jweKZ88z3kHYVpQXsvvU/yvBctq5AeAAAAAAuAAABUBAOoApChACAAAAAKCAdNoRkt5Var91KMeL2v6LqdeaLQ2nbJ2/inJ9LL0N6AI2GyADIIAACNgGyJBIyAHN6a5NenTq+MJar4S/7S6nSGs0khrZNWW5J/utP0A+egpLgAAAAKgIVhsgAAAUhSAAAABSAAAB3WiEr5OvKU187+pumczoRX7tanuakuas/5V1OnAxMkAAAI2BQRFAAAAa7P8v8AD1/yNdbL1NiaLTCtq0NXxqSiuS7z+i6gcOwAAAAArIAAAAAACkKQAUEAAAAAW4GwzDl3Y1oSb7su7Pg/Hk7PkfRD5UdrornbtIKjN9+C7v8AuivVAdAARsA2RIIyAAAAS5GwkBkcNpbl3aVtRPu0rx/aftei5HR6Q51VCnZP8Sd1Bbt8nw+pwLYEAKgFiAAAAABSAAABSFIAAAAAoAgAAzpVHFqUW04u6axTMAB3OY8/xrJQnaNTopcPPyN1Y+Wm6zbpLVpWjL8SK+J2kuEvvcDugabJdJsnnjKUHulF26q6NhTzhRlhWpPhUj9wPSYtn4VMupLGrSXGpBep4Mo0iyeHv673QTl88PmBtkjW55z1Cgre1N+zBP5y3I57OOlNSd4012a3+1Lrgv1tNBKTbbbbbxbd2wP1yvKZVJynN3lLH7Lcj8QAKiAAAAAKCAAAAAAAFIAAKBAAAAPXm/NtSu7U47F7UnsiuL9APIe3Is11qvsU218T7sf3njyOszZo3Sp2c/xJb2u6uEfubtIDjKuidVQ1lOEpL3FddJPxNDUpuLcZJprFNNNcj6keXLs30qytUgnueDXBraB80B1mVaIrGnVa8pq/8S+x4KmiuULDs3wm19UBogbyGi2UPHs1xn9ke7JtEH/qVeKhH+p/YDlkr2S2t4LE3uR6LVZw1pSjBv2YyTb529k6nIM1UaPsQV/ifel1eHI9jYHzzLczVqV3KDcV70e9Hi7YczXn1RI1WctH6Na7tqS+KKS6rB/UDgAbHOmZ6tDbJXj4TWHPczXAAAAAAAAoE5rqB+sEAKQoAEAAAHVaN5gvatWXnTg/lKS+iA8uY9HXUtUq3jDGMcJS+y+Z2FCjGKUYxUYrBJJJH6NFAAAAYthsJAEjIAAAGBi2VIJFAAADGcU000mnsaaumcpnvRu16lBecqfj+z9v7HVlSA+WMh2mkeYVUvVpK08ZR+P/ANfU4xoCAFQAgAAAAUh5soryU4RSVpWv3ZPxtisP1gekAAe3NOQOvUjTWxYze6Kx5+AG00XzP2j7aou5F9xP3pLx4L5s7NM/OjSUUoxVlFJJbkj9QAAAAlygSxQAABi2BblIkUAAABGigCJFAAHLaV5mvfKKa2r/ADUvFfGvXqdQ2Y4gfLQbbSLNnYVO6u5O7h5b48voakAAAAAA8GWW7aje1/DbHZte1LF4/wB9p7zw5Y/xaHF+L2XusLW24YnuAHeaMZu7KkpNd6paUvJe6um3mcnmPI+2rU4W2e1P8sdrXPYuZ9FAAAAYthsJAEjIAAAYsA2VIJFAAAAY3BUgCKAAI2GzEClSCRQPBnvIFXpSh7y2we6Sw64cz501bY/DE+qHB6V5F2ddyS7tVay44SXXbzA0wLcgAAAeLK5R7SltjrbdS8pp7cdi2W47me08OXVPxaMfO75tJX5rrbyv7gOu0JyW0atV+LUY8Ftf1XQ6c12j1DUyeit8dZ/td71NiAJIoAxSMgAABi2BkAgAAAAxMiWAJFAAAjYTArIkUAAABGzRaXZNrUNdY0pJ8nsfo+RvbH5ZZQ16dSn8cZR6qwHzAAAAAB4stqtVKMVrJNu9pJJ7UrNY+Pz89nuSvs3njyqhKVSnJWtF97vO/TC2HntZscijepSW+cF/EgPptKGqoxXgklyDYkwkBUUAAAYtgGypBIoAAAGRMhUgKAABGGyAQySKgAAI2AuUxSMgAAA+Z5yp6tatHdOduGs7HmNjpBH/ABNf8y+aTNcBdVbwQAU/fN/+bR/5Kf8AMgAPpZkAAAAEZjH9fMADMAACMACRMgAAAAxZUABQAAMX4gAVFAABgAfPtIv/AKK3H+mJqwAAAA//2Q=="
+                                        alt=""
+                                        className="w-full h-full rounded-full"
+                                      />
+                                    ) : (
+                                      <img
+                                        src={`${imageApi}${item.avatar}`}
+                                        alt=""
+                                        className="w-full h-full rounded-full"
+                                      />
+                                    )}
+                                  </>
+                                );
+                              }
+                            })}
+                          </div>
+                          <div className="w-[150px]  ml-2 overflow-hidden ">
+                            {users?.map((item) => {
+                              if (item.id == el.userId) {
+                                return (
+                                  <>
+                                    <h1 className="font-bold">
+                                      {item.userName}
+                                    </h1>
+                                  </>
+                                );
+                              }
+                            })}
+
+                            <p className="text-[gray]">{el.comment}</p>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })}
+                </div>
+                <div className="bg--400 h-[50px] w-[90%] m-auto border-t-2 flex items-center justify-between">
+                  <input
+                    type="text"
+                    placeholder="Add a comment..."
+                    className="h-[30px] outline-none text-[17px] bg--300 w-[180px]"
+                    value={commentInput}
+                    onChange={(ev) => setCommentInput(ev.target.value)}
+                  />
+                  {commentInput == "" ? null : (
+                    <h1 onClick={() => { setCommentInput(""); dispatch(AddComent({ com: commentInput, id: byId.postId }));}} className="text-blue-400 cursor-pointer">Sent</h1>
+                  )}
+                  <button>
+                    <SentimentSatisfiedAltIcon />
+                  </button>
+                </div>
+              </div>
+            </Dialog>
+          </React.Fragment>
+
+          {/* <Dialog
             open={open}
             onClose={handleClose}
             aria-labelledby="alert-dialog-title"
@@ -162,6 +298,7 @@ const Reels = () => {
               height: "400px",
               marginLeft: "1070px",
               marginTop: "60px",
+              // backgroundColor: "white",
             }}
           >
             <div>
@@ -169,10 +306,10 @@ const Reels = () => {
                 <CloseIcon onClick={() => handleClose()} />
                 <h1 className="text-[18px] font-[500] text-[gray]">Comments</h1>
               </div>
-              {data.map((el) => {
+              {data?.map((el) => {
                 return (
                   <div key={el.id}>
-                    {el.comments.map((el) => {
+                    {el.comments?.map((el) => {
                       return (
                         <div className="flex overflow-hidden">
                           <img
@@ -180,7 +317,7 @@ const Reels = () => {
                             src={
                               length == 0
                                 ? "https://tse4.mm.bing.net/th?id=OIP.jixXH_Els1MXBRmKFdMQPAHaHa&pid=Api&P=0&h=220"
-                                : Byid?.images
+                                : `${imageApi}${elem.images}`
                             }
                             alt=""
                           />
@@ -213,22 +350,22 @@ const Reels = () => {
                     dispatch(
                       postComment({
                         comment: comments,
-                        postId: e.postId, // <- Issue here, e.postId is likely undefined
+                        postId: idx, // <- Issue here, e.postId is likely undefined
                       })
                     );
                     dispatch(setComment(""));
                   }}
                 >
                   post
-                </button>
-                {/* <input
+                </button> */}
+          {/* <input
                   className="text-[gray] text-[18px] w-[80%] h-[40px] pl-[10px] outline-none"
                   placeholder="Add a comment..."
                   type="text"
                   onChange={(e) => dispatch(setComment(e.target.value))}
                   value={comments}
                 /> */}
-                {/* <button
+          {/* <button
                   className="text-[#2121eeb0] mr-4"
                   onClick={(e) => {
                     dispatch(
@@ -243,10 +380,10 @@ const Reels = () => {
                   post
                 </button> */}
 
-                <AddReactionIcon sx={{ color: "gray" }} />
+          {/* <AddReactionIcon sx={{ color: "gray" }} />
               </div>
             </div>
-          </Dialog>
+          </Dialog> */}
         </div>
       </div>
     </>
