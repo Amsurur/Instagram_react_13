@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosRequest } from "../../utils/axiosRequest";
 
-export const getData = createAsyncThunk("todo/getData", async () => {
+export const getData = createAsyncThunk("explore/getData", async () => {
   try {
     const { data } = await axiosRequest.get("Post/get-posts");
     return data.data;
@@ -11,18 +11,21 @@ export const getData = createAsyncThunk("todo/getData", async () => {
 });
 
 let idx = null;
-export const getpostById = createAsyncThunk("todo/getpostById", async (id) => {
-  try {
-    let { data } = await axiosRequest.get(`Post/get-post-by-id?id=${id}`);
-    idx = id;
-    return data.data;
-  } catch (error) {
-    console.log(error);
+export const getpostById = createAsyncThunk(
+  "explore/getpostById",
+  async (id) => {
+    try {
+      let { data } = await axiosRequest.get(`Post/get-post-by-id?id=${id}`);
+      idx = id;
+      return data.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
-});
+);
 
 export const addLike = createAsyncThunk(
-  "todo/addLike",
+  "explore/addLike",
   async (id, { dispatch }) => {
     try {
       const { data } = await axiosRequest.post(`Post/like-post?postId=${id}`);
@@ -34,7 +37,7 @@ export const addLike = createAsyncThunk(
 );
 
 export const addComment = createAsyncThunk(
-  "todo/addComment",
+  "explore/addComment",
   async (newComment, { dispatch }) => {
     try {
       const { data } = await axiosRequest.post("Post/add-comment", {
@@ -48,7 +51,7 @@ export const addComment = createAsyncThunk(
   }
 );
 
-export const getUsers = createAsyncThunk("todo/getUsers", async () => {
+export const getUsers = createAsyncThunk("explore/getUsers", async () => {
   try {
     const { data } = await axiosRequest.get(`User/get-users`);
     return data.data;
@@ -58,7 +61,7 @@ export const getUsers = createAsyncThunk("todo/getUsers", async () => {
 });
 
 export const deleteComment = createAsyncThunk(
-  "todo/deleteComment",
+  "explore/deleteComment",
   async (id) => {
     try {
       const { data } = await axiosRequest.delete(
@@ -71,7 +74,7 @@ export const deleteComment = createAsyncThunk(
 );
 
 export const postFollowingRelationShip = createAsyncThunk(
-  "todo/postFollowingRelationShip",
+  "explore/postFollowingRelationShip",
   async (id) => {
     try {
       const { data } = await axiosRequest.post(

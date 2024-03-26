@@ -58,9 +58,9 @@ const Explore = () => {
   };
 
   const imageURL = import.meta.env.VITE_APP_FILES_URL;
-  const data = useSelector((state) => state.todo.data);
-  const ById = useSelector((state) => state.todo.ById);
-  const users = useSelector((state) => state.todo.users);
+  const data = useSelector((state) => state.explore.data);
+  const ById = useSelector((state) => state.explore.ById);
+  const users = useSelector((state) => state.explore.users);
   // console.log(ById);
   const [comments, setComment] = useState("");
   const dispatch = useDispatch();
