@@ -36,8 +36,8 @@ const SearchUser = ({ onCloseModal }) => {
       <div
         ref={closeModalSearch}
         onClick={(event) => {
-          console.log(event.target);
-          console.log(closeModalSearch.current);
+          // console.log(event.target);
+          // console.log(closeModalSearch.current);
           if (event.target === closeModalSearch.current) {
             onCloseModal(false);
           }

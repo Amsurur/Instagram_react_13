@@ -36,76 +36,55 @@ import insText from "../pages/Login/insText.png";
 import ModalPost from "../components/ModalPost";
 import LogOut from "../components/logOut/LogOut";
 
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 // Post Modal
 
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 
-import SettingsIcon from '@mui/icons-material/Settings';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import SettingsIcon from "@mui/icons-material/Settings";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
-import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
+import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
 import Switcher from "../components/switcher/Switcher";
 
-import HistoryToggleOffOutlinedIcon from '@mui/icons-material/HistoryToggleOffOutlined';
+import HistoryToggleOffOutlinedIcon from "@mui/icons-material/HistoryToggleOffOutlined";
 const style = {
-  position: 'fixed',
-  top: '50%',
-  left: '20%',
-  transform: 'translate(-50%, -50%)',
+  position: "fixed",
+  top: "50%",
+  left: "20%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  height:"100vh",
-  bgcolor: 'background.paper',
-  border: 'px solid #000',
+  height: "100vh",
+  bgcolor: "background.paper",
+  border: "px solid #000",
   boxShadow: 10,
   p: 4,
-  overflow: 'scroll'
+  overflow: "scroll",
 };
 
-
- export const Layout = () => {
-  const [modal,setSearcModal]=useState(false)
-  const [open1, setOpen1] =useState(false);
+export const Layout = () => {
+  const [modal, setSearcModal] = useState(false);
+  const [open1, setOpen1] = useState(false);
   const handleOpen = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
-  
- const forclose=()=>{
-  setSearcModal(false)
- }
 
- const onWrapperClick=(event)=>{
-if(event.target.classlist.contains("searchModal"))forclose()
- }
+  const forclose = () => {
+    setSearcModal(false);
+  };
 
-const closeModalSearch=useRef()
-// console.log(tooltiRef);
-// useEffect(()=>{
 
-//  if(!modal) return
-//   const handleClick=(e)=>{
-//     if(!tooltiRef.current) return;
-//     if(!tooltiRef.current.contains(e.target)) {
-//       forclose()
-//     }
-//   }
-// document.addEventListener('click', handleClick)
-// return ()=>{
-// document.removeEventListener('click', handleClick)
 
-// }
-// },[modal,forclose])
 
-const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
-
 
   const handleClose = () => {
     setOpen(false);
@@ -116,9 +95,6 @@ const [open, setOpen] = useState(false);
 
   // const myId = getToken().sid;
   // const myId = getToken().sid;
-
-
- 
 
   useEffect(() => {
     AOS.init();
@@ -219,7 +195,7 @@ const [open, setOpen] = useState(false);
               </li>
             </NavLink>
 
-            {/* <search/> */}
+            {/* <search/> */} 
             {modal ? (
               <NavLink
                 onClick={() => setSearcModal(false)}
@@ -275,6 +251,7 @@ const [open, setOpen] = useState(false);
                 </li>
               </NavLink>
             )}
+            
             {/* <NavLink onClick={()=>setSearcModal(true)}
             
               className={
@@ -453,9 +430,7 @@ const [open, setOpen] = useState(false);
       </aside>
       {/* searchmodal  */}
 
-      {modal ? (
-        <SearchUser onCloseModal={setSearcModal} />
-      ) : null}
+      {modal ? <SearchUser onCloseModal={setSearcModal} /> : null}
 
       {/* Контентная часть */}
       <aside
