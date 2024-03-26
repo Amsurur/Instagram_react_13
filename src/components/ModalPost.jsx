@@ -35,10 +35,15 @@ import 'swiper/css/pagination';
 
 import '../App.css';
 
-// import required modules
+
 import { Pagination } from 'swiper/modules';
 
-import {fileToBase64} from "../utils/fileToBase64"
+import  {fileToBase64} from "../utils/fileToBase64"
+
+
+
+
+
 
 
 const style = {
@@ -67,10 +72,10 @@ const ModalPost = () => {
 
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("")
-    const [img, setImg] = useState([])
-    const [video, setVideo] = useState([])
 
-    const [base, setBase] = useState([])
+    const [img, setImg] = useState([])
+
+
 
 
 
@@ -79,57 +84,52 @@ const ModalPost = () => {
     
     
     
-    // const [arr, setArr] = useState([])
-  let  arr = [
-        {
-          "type": "video",
-          "src": "base64"
-        },
-       {
-          "type": "img",
-          "src": "base64"
-        },
-       ]
+    const [arr, setArr] = useState([])
 
 
+
+    
+    
     
 
     const handleFileInputChange = async (event) => {
         
         const files = event.target.files;
-
-
-        arr.forEach(async (el)=>{
-           if( el.type.includes(img)){
-               img.push(files)
-
-               
-           
-               let base64 = await  fileToBase64(files)
-               setImg((prev) => ([...prev, ...base64]))
-               console.log(base64);
-      
-
-        
-           } 
-           
-               else if (el.type.includes(video)) {
-                   video.push(files)
-
-            
-                    let base64 = await  fileToBase64(files)
-                    setVideo((prev) => ([...prev, ...base64]))
-                    console.log(base64);
-          
+        let toBase64 = [];
          
-                 }
-        
-        })
+        setImg(files)
+        for(let i = 0; i<files.length; i++){
+            console.log(files[i])
+            if(files[i].type.includes("image")){
 
-        
+                let base64 = await fileToBase64(files[i])
 
+                let file = {
+                    type: "img",
+                  src: base64
+                  }
+
+                  toBase64.push(file)
+            }
+
+            if(files[i].type.includes("video")){
+
+                let base64 = await fileToBase64(files[i])
+
+                let file = {
+                    type: "video",
+                  src: base64
+                  }
+
+                  toBase64.push(file)
+            }
+
+        }
+
+
+        setArr(toBase64)
+ 
     }
-
 
 
 
@@ -153,7 +153,7 @@ const ModalPost = () => {
                 }
             >
                 <li
-                    onClick={() => { setOpen(true), setModal(false), setBase(null) }}
+                    onClick={() => { setOpen(true), setModal(false)  }}
                     className="flex items-center hover:text-[#3B82F6] w-[215px] cursor-pointer gap-[15px] rounded-[7px] p-[10px] transition-all duration-300">
                     <AddBoxOutlinedIcon />
                     <p
@@ -195,19 +195,32 @@ const ModalPost = () => {
 
                     <Typography id="modal-modal-description" sx={{ mt: 3 }}>
 
-                        {/* <img 
-                        
-                        onChange={handleFileInputChange}
-                        className='m-auto h-[150px] mt-[5%]' src={base === null?  log : base} alt="" /> */}
-  
+                      
 
-                  <div className='w-[70%] m-auto mt-[20px] h-[200px]  '>
+                  <div className='w-[80%] m-auto mt-[10%] h-[220px] rounded-[5px]  '>
+
 
                    <Swiper pagination={true} modules={[Pagination]} className="mySwiper">
-                        {
-                         base?.map((bases, index) => {
-                            return <SwiperSlide key={index} >
-                              <img src={bases.length === 0 ? log : bases}  />
+
+                
+                   {arr.length === 0 ? <SwiperSlide >
+                    
+                    <div className='w-[70%] h-[215px] '>
+
+                    <img className=' object-cover' src={log} />
+
+                    </div>
+                    
+                    </SwiperSlide>:null}         
+
+                   
+                   
+                    {
+                            arr?.map((bases, index) => {
+                                return <SwiperSlide key={index} >
+
+                                { bases.type === 'img' ? <img src={bases.src} />: bases.type === 'video' ? <video type="mp4" width={300} height={280} controls multiple muted  autoPlay={false}   src={bases.src} ></video> : null }
+                              
                                 </SwiperSlide>
 
                                     }

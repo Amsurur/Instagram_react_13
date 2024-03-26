@@ -3,10 +3,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import { axiosRequest } from '../../utils/axiosRequest';
-import { useState } from 'react';
-
-// const api  = import.meta.env.VITE_APP_API_URL
-
 
 
 
