@@ -54,9 +54,36 @@ export const postFolow = createAsyncThunk(
   }
 );
 
+export const deleteFolow = createAsyncThunk(
+  "Home/deleteFolow",
+  async (id, { dispatch }) => {
+    try {
+      let { data } = await axiosRequest.delete(
+        `FollowingRelationShip/delete-following-relation-ship?id=${id}`
+      );
+      dispatch(getUsers());
+      dispatch(ckeckFolow());
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
 export const getById = createAsyncThunk("Home/getById", async (id) => {
   try {
     let { data } = await axiosRequest.get(`Post/get-post-by-id?id=${id}`);
+    return data.data;
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+export const ckeckFolow = createAsyncThunk("Home/ckeckFolow", async () => {
+  let id = getToken().sid;
+  try {
+    let { data } = await axiosRequest.get(
+      `FollowingRelationShip/get-subscriptions?UserId=${id}`
+    );
     return data.data;
   } catch (error) {
     console.error(error);
@@ -84,14 +111,17 @@ export const getStoriesById = createAsyncThunk(
     }
   }
 );
-export const postLikeStory = createAsyncThunk("Home/postLikeStory", async (id,{dispatch}) => {
-  try {
-    let { data } = await axiosRequest.post(`Story/LikeStory?storyId=${id}`);
-    dispatch(getStoriesById(id))
-  } catch (error) {
-    console.error(error);
+export const postLikeStory = createAsyncThunk(
+  "Home/postLikeStory",
+  async (id, { dispatch }) => {
+    try {
+      let { data } = await axiosRequest.post(`Story/LikeStory?storyId=${id}`);
+      dispatch(getStoriesById(id));
+    } catch (error) {
+      console.error(error);
+    }
   }
-})
+);
 
 export const addComment = createAsyncThunk(
   "Home/addComment",
@@ -130,6 +160,7 @@ export const addFavorite = createAsyncThunk(
     try {
       let { data } = await axiosRequest.post(`Post/add-post-favorite`, user);
       dispatch(getById(id));
+      dispatch(getData());
     } catch (error) {
       console.error(error);
     }
