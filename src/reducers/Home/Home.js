@@ -4,6 +4,7 @@ import axios from "axios";
 
 import { axiosRequest } from "../../utils/axiosRequest";
 import {
+  ckeckFolow,
   getById,
   getData,
   getStories,
@@ -26,10 +27,14 @@ export const Home = createSlice({
     loading: false,
     loadingData2: false,
     loadingYour: false,
+    checkFollowData: [],
   },
   reducers: {},
 
   extraReducers: (builder) => {
+    builder.addCase(ckeckFolow.fulfilled, (state, action) => {
+      state.checkFollowData = action.payload
+    });
     builder.addCase(getById.fulfilled, (state, action) => {
       state.data3 = action.payload;
     });
