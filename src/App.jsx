@@ -12,6 +12,8 @@ import { Layout } from "./Layout/Layout";
 import Registration from "./pages/Registration/Registration";
 import AuthCheck from "./utils/AuthChek";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import EditProfile from "./pages/editProfile/editProfile";
+import UserProfile from "./pages/userProfile/UserProfile";
 
 export const App = () => {
   const router = createBrowserRouter([
@@ -56,8 +58,16 @@ export const App = () => {
           element: <Profile />,
         },
         {
+          path: "profile/editProfile",
+          element: <EditProfile />,
+        },
+        {
           path: "profile/account/settings",
           element: <Settings />,
+        },
+        {
+          path: "user/:id",
+          element: <UserProfile />,
         },
       ],
     },

@@ -76,6 +76,7 @@ export const Layout = () => {
   const forclose = () => {
     setSearcModal(false);
   };
+  const imageApi = import.meta.env.VITE_APP_FILES_URL;
 
   const [open, setOpen] = useState(false);
 
@@ -86,6 +87,8 @@ export const Layout = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  let image = getToken().sub;
+  console.log(getToken());
   const location = useLocation();
   const dispatch = useDispatch();
   let [followingState, setFollowingState] = useState(false);
@@ -194,7 +197,7 @@ export const Layout = () => {
 
             {/* <search/> */}
             {modal ? (
-              <NavLink
+              <box
                 onClick={() => setSearcModal(false)}
                 className={
                   "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
@@ -219,9 +222,9 @@ export const Layout = () => {
                     Поисковой запрос
                   </p>
                 </li>
-              </NavLink>
+              </box>
             ) : (
-              <NavLink
+              <box
                 onClick={() => setSearcModal(true)}
                 className={
                   "focus:bg-[#EFF6FF] focus:border-r-2 focus:text-[#3B82F6] border-[#3B82F6]"
@@ -246,7 +249,7 @@ export const Layout = () => {
                     Поисковой запрос
                   </p>
                 </li>
-              </NavLink>
+              </box>
             )}
 
             {/* <NavLink onClick={()=>setSearcModal(true)}
@@ -381,7 +384,7 @@ export const Layout = () => {
             >
               <li className="flex items-center hover:text-[#3B82F6] w-[215px] gap-[15px] rounded-[7px] p-[10px] transition-all duration-300">
                 <Avatar
-                  src={navProfile}
+                  src={`${imageApi}/${image}`}
                   sx={{ width: "25px", height: "25px" }}
                 />
                 <p
@@ -455,8 +458,7 @@ export const Layout = () => {
             ></Typography>
           </Box>
         </Modal>
-            
-        
+
         {/* <div className=''> */}
         {/* <button onClick={()=> destroyToken()}>Logout</button> */}
         <Dialog
