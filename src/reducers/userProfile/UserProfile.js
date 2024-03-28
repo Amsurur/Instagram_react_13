@@ -12,11 +12,32 @@ export const userProf = createAsyncThunk("userprofil/userProf", async (id) => {
   }
 });
 
+export const getusers = createAsyncThunk("userprofil/getusers", async (id) => {
+  try {
+    const { data } = await axiosRequest.get(`User/get-users?PageSize=2000`);
+    return data.data;
+  } catch (error) {
+    // console.log(error);
+  }
+});
+
+export const subscribeer = createAsyncThunk("userprofil/userProf", async (id,{dispatch}) => {
+  try {
+    const { data } = await axiosRequest.post(
+      `FollowingRelationShip/add-following-relation-ship?followingUserId=${id}`
+    );
+    dispatch(userProf(id))
+    
+  } catch (error) {
+    console.log(error);
+  }
+})
 export const UserProfile = createSlice({
   name: "userprofil",
   initialState: {
     value: 0,
     data: [],
+    users:[]
   },
   reducers: {
     increment: (state) => {
@@ -34,6 +55,9 @@ export const UserProfile = createSlice({
       console.log(action.payload);
       state.data = action.payload;
     });
+    builder.addCase(getusers.fulfilled, (state, action) => {
+      state.users = action.payload
+    })
   },
 });
 

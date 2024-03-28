@@ -87,7 +87,7 @@ export const Layout = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  let image = getToken().sub;
+  let image = getToken()?.sub;
   console.log(getToken());
   const location = useLocation();
   const dispatch = useDispatch();
