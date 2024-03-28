@@ -1,29 +1,26 @@
-import img8 from "../../assets/images/pic6.png";
-import PropTypes from "prop-types"; 
-import Logo from "../../assets/icons/Carousel.png";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import { Fragment, useEffect, useRef, useState } from "react";
-import Button from '@mui/material/Button';
-import { useDispatch, useSelector } from "react-redux";
-import { store } from "../../store/store";
-import { GetPostByUser, getFollowings, getProfileById, putProfileImage } from "../../api/profile/profile";
-import { destroyToken, getToken } from "../../utils/token";
 import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import CloseIcon from "@mui/icons-material/Close";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import Box from "@mui/material/Box";
-import ArticleIcon from "@mui/icons-material/Article";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import PersonIcon from "@mui/icons-material/Person";
-import Modal from "@mui/material/Modal";
-import Backdrop from "@mui/material/Backdrop";
-import Fade from "@mui/material/Fade";
+import ArticleIcon from "@mui/icons-material/Article";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import React, { useEffect, useState } from "react";
 
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+
+import Logo from "../../assets/icons/settings.png";
+
+import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
+
+import Backdrop from "@mui/material/Backdrop";
+import Modal from "@mui/material/Modal";
+import Fade from "@mui/material/Fade";
+import Button from "@mui/material/Button";
+import "../../App.css";
+
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 
 const style = {
@@ -38,13 +35,12 @@ const style = {
   outline: "none",
   p: 4,
 };
-
-const styleImageEditProfile = {
+const styleModal = {
   position: "absolute",
-  top: "40%",
+  top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 340,
   bgcolor: "background.paper",
   boxShadow: 24,
   borderRadius: "10px",
@@ -75,123 +71,119 @@ const styleFollowing = {
   p: 4,
 };
 
-
-
-
-
-
-function CustomTabPanel(props) {
-
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-CustomTabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
+const styleImageEditProfile = {
+  position: "absolute",
+  top: "40%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  borderRadius: "10px",
+  p: 4,
 };
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
+const stylePost = {
+  position: "absolute",
+  top: "50%",
+  left: "60%",
+  transform: "translate(-50%, -50%)",
+  width: 500,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  borderRadius: "10px",
+  p: 4,
+};
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import Box from "@mui/material/Box";
+
+import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
+
+import {
+  getProfileById,
+  GetPostByUser,
+  getFollowings,
+  getFollowers,
+  putProfileImage,
+  getPosts,
+} from "../../api/profile/profile";
+import {
+  addComment,
+  addLike,
+  getpostById,
+} from "../../api/ExploreApi/ExploreApi";
+import { useDispatch, useSelector } from "react-redux";
+
+import { destroyToken, getToken } from "../../utils/token";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const [value, setValue] = useState(0);
-  const [open, setOpen] = useState(false);
-  const [scroll, setScroll] = useState('paper');
+  const [value, setValue] = useState("1");
 
+  const Byid = useSelector((state) => state.explore.ById);
+  let comments = useSelector((store) => store.explore.Comments);
+  const imgUrl = import.meta.env.VITE_APP_FILES_URL;
 
-  const handleClickOpen = (scrollType) => () => {
-    setOpen(true);
-    setScroll(scrollType);
+  const handleBookmarkClick = () => {
+    setSaved((prevSaved) => !prevSaved);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [isSaved, setSaved] = useState(false);
 
-  const descriptionElementRef = useRef(null);
-  useEffect(() => {
-    if (open) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
-    }
-  }, [open]);
+  const [imageEdit, setImageEdit] = useState("");
 
-  const [editImageProfile, setEditImageProfile] = useState(false)
-  const handleOpenEditImageProfile = () => setEditImageProfile(true)
-  const handleCloseEditImageProfile = () => setEditImageProfile(false)
-  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
 
-
-
-  const [followingProfile, setFollowingProfile] = useState(false);
-  const handleOpenFollowingProfile = () => setFollowingProfile(true);
-  const handleCloseFollowingProfile = () => setFollowingProfile(false);
-
-
+  const [idx, setIdx] = useState();
 
   const [followerProfile, setFollowerProfile] = useState(false);
   const handleOpenFollowerProfile = () => setFollowerProfile(true);
   const handleCloseFollowerProfile = () => setFollowerProfile(false);
 
-
-  function logOut() {
-    navigate("/");
-    destroyToken("access_token");
-  }
-
-  const dispatch = useDispatch()
-  const [search, setSearch] = useState("");
-
-  const [imageEdit, setImageEdit] = useState("");
-
-
-
-
   const [menuProfile, setMenuProfile] = useState(false);
   const handleOpenProfile = () => setMenuProfile(true);
   const handleCloseProfile = () => setMenuProfile(false);
 
-  const userProfile = useSelector((store) => store.profile.userProfile)
-  const postUser = useSelector((store) => store.profile.postUser);
-  const followingsUser = useSelector((store) => store.profile.followingsUser);
-  const followersUser = useSelector((store) => store.profile.followersUser);
-
-
-  console.log(userProfile)
-
-
+  const [editImageProfile, setEditImageProfile] = useState(false);
+  const handleOpenEditImageProfile = () => setEditImageProfile(true);
+  const handleCloseEditImageProfile = () => setEditImageProfile(false);
 
   const [openPost, setOpenPost] = useState(false);
+
 
   const handleOpenPost = () => {
     setOpenPost(true);
   };
+  const handleClosePost = () => setOpenPost(false);
 
-  const [idx, setIdx] = useState();
+  const [isFollowing, setFollowing] = useState(false);
 
+  const handleButtonClick = () => {
+    setFollowing((prevFollowing) => !prevFollowing);
+  };
+
+  const [followingProfile, setFollowingProfile] = useState(false);
+  const handleOpenFollowingProfile = () => setFollowingProfile(true);
+  const handleCloseFollowingProfile = () => setFollowingProfile(false);
+
+  const [imageProfile, setImageProfile] = useState([]);
+
+  const [modalProfile, setModalProfile] = useState(false);
+  const handleOpenModalProfile = (elem) => (
+    setImageProfile(elem), setModalProfile(true)
+  );
+  const handleCloseModalProfile = () => setModalProfile(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userProfile = useSelector((store) => store.profile.userProfile);
+  const postUser = useSelector((store) => store.profile.postUser);
+  const followingsUser = useSelector((store) => store.profile.followingsUser);
+  const followersUser = useSelector((store) => store.profile.followersUser);
+  const posts = useSelector((store) => store.profile.posts)
 
   const handleClick = function () {
     dispatch(
@@ -201,142 +193,175 @@ const Profile = () => {
     );
   };
 
-
-
-
-  useEffect(() => {
-    dispatch(getProfileById(getToken().sid))
-    dispatch(GetPostByUser(getToken().sid))
-    dispatch(getFollowings(getToken().sid))
-  }, [dispatch],
-    getProfileById())
-
-
+  const formatDate = (datePublished) => {
+    const date = new Date(datePublished);
+    const day = date.getDate();
+    const month = date.toLocaleString("default", { month: "long" });
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+
+  const formattedDate = formatDate(Byid?.datePublished);
+
+  function logOut() {
+    navigate("/basic/login");
+    destroyToken("access_token");
+  }
+
+  useEffect(
+    () => {
+      dispatch(getProfileById(getToken().sid));
+      dispatch(GetPostByUser(getToken().sid));
+      dispatch(getFollowings(getToken().sid));
+      dispatch(getFollowers(getToken().sid));
+      dispatch(getPosts(getToken().sid))
+    },
+    [dispatch],
+    getProfileById()
+  );
+
   return (
-    <div>
-      <div className="flex ml-[-100px] justify-between items-center">
-        <div className="w-[40%] mt-[100px]">
+    <div className="p-[60px] ml-[100px] pr-[200px] ">
+      <div className="flex justify-between items-center">
+        <div className="w-[30%]">
           <img
             onClick={() => handleOpenEditImageProfile()}
-            className="w-[170px] rounded-full cursor-pointer  h-[170px] object-cover"
+            className="w-[75%] rounded-full cursor-pointer  h-[29vh] object-cover"
             src={
               userProfile.image !== ""
-                ? `${import.meta.env.VITE_APP_FILES_URL}${userProfile?.image}`
+                ? `${import.meta.env.VITE_APP_FILES_URL}/${userProfile.image}`
                 : "https://tse4.mm.bing.net/th?id=OIP.jixXH_Els1MXBRmKFdMQPAHaHa&pid=Api&P=0&h=220"
             }
             alt=""
           />
         </div>
-        <div className="w-[70%] mt-[100px] ">
-          <div className="flex  w-[98%]  items-center gap-[60px]">
+        <div className="w-[70%]">
+          <div className="flex flex-wrap w-[98%]  items-center gap-[40px]">
             <div>
-              <h1 className="text-[19px] font-[700] font-sans">
+              <h1 className="text-[22px] font-[700] font-sans">
                 {userProfile?.userName}
               </h1>
             </div>
-            <div className="flex items-center gap-[20px] h-[50px]">
+            <div className="flex items-center gap-[20px]  h-[50px] ">
               <NavLink to="/basic/profile/editProfile">
                 <button
                   onClick={() => {
                     getProfileById(getToken().sid);
                   }}
-                  className="w-[120px]  text-[16px] h-[40px] bg-[whitesmoke] rounded-xl font-sans font-[700]"
+                  className="w-[100px]  text-[15px] h-[35px] font-sans font-[600] bg-[whitesmoke] rounded-xl"
                 >
                   Edit profile
                 </button>
               </NavLink>
 
-              <button className="w-[120px] text-[16px] h-[40px] bg-[whitesmoke] rounded-xl font-sans font-[700]">
+              <button className="w-[100px] text-[15px] h-[35px] font-sans font-[600] bg-[whitesmoke] rounded-xl ">
                 View archive
               </button>
               <IconButton onClick={() => handleOpenProfile()}>
-                <MenuIcon sx={{ width: "40px", height: "40px" }} />
+                <MenuIcon sx={{ width: "30px", height: "30px" }} />
               </IconButton>
             </div>
           </div>
           <div className="flex justify-between w-[70%] p-[0px] items-center mt-[20px] mb-[15px]">
             <div className="flex w-[32%]  hover:bg-[whitesmoke] hover:duration-700 cursor-pointer  text-center p-[5px] rounded-xl">
-              <h1 className="text-[20px] text-[gray] text-center font-sans">
-                <span className="text-[20px] font-[700] text-[black] pr-[5px] pl-[10px]">
+              <h1 className="text-[20px] text-[gray] text-center">
+                <span className="text-[20px] font-[700] text-[black] font-sans pr-[5px] pl-[10px]">
                   {userProfile.postCount}
                 </span>
-                posts
+                <span className="text-[17px]">
+                  posts
+                </span>
               </h1>
             </div>
             <div
               onClick={() => handleOpenFollowerProfile()}
               className="w-[32%] flex  hover:bg-[whitesmoke] hover:duration-700 cursor-pointer  text-center p-[5px] rounded-xl pl-[10px]"
             >
-              <h1 className="text-[20px] text-[gray] text-center font-sans ">
-                <span className="text-[20px] font-[700] text-[black] pr-[5px]">
+              <h1 className="text-[20px] text-[gray] text-center ">
+                <span className="text-[20px] font-[700] font-sans text-[black] pr-[5px]">
                   {userProfile.subscribersCount}
                 </span>
-                follower
+                <span className="text-[17px]">
+                  followers
+                </span>
               </h1>
             </div>
             <div
               onClick={() => handleOpenFollowingProfile()}
               className="w-[32%] flex  hover:bg-[whitesmoke] hover:duration-700 cursor-pointer   text-center p-[5px] rounded-xl pl-[10px]"
             >
-              <h1 className="text-[20px] text-[gray] font-sans ml-[15px]">
-                <span className="text-[20px] font-[700] text-[black] pr-[5px]">
+              <h1 className="text-[20px] text-[gray]">
+                <span className="text-[20px] font-[700] font-sans text-[black] pr-[5px]">
                   {userProfile.subscriptionsCount}
                 </span>
-                following
+                <span className="text-[17px]">
+                  followings
+                </span>
               </h1>
             </div>
           </div>
           <div className="w-[70%] mt-[20px] mb-[15px]">
-            <h1 className="text-[19px] font-[700]  text-[#323131] font-sans">
+            <h1 className="text-[22px] font-[700] text-[#323131] font-sans">
               {userProfile.fullName}
             </h1>
           </div>
         </div>
       </div>
 
-      <div className="flex ml-[-100px] mt-[45px] mb-[20px] gap-[20px]">
-        <div className="text-center">
-          <img src={img8} alt="" />
-          <p>NEw</p>
+
+      <div className="p-[10px] flex gap-10 mt-[20px] mb-[30px] border-b-[3px]">
+        <div className="w-[7.5%]">
+          <div className="w-[60px] h-[60px] bg-[whitesmoke] text-center rounded-full">
+            <AddIcon
+              sx={{
+                width: "30px",
+                height: "30px",
+                marginTop: "15px",
+                color: "gray",
+              }}
+            />
+          </div>
+          <h1 className="text-center text-[18px] font-sans font-[700]">New</h1>
         </div>
       </div>
 
-
-      <div className="ml-[-200px]">
+      <div className="m-[auto] w-[100%]">
         <TabContext value={value}>
           <Box
             sx={{
               borderBottom: 0,
               borderColor: "divider",
-              width: "100%",
+              width: "90%",
+              marginLeft: "-100px"
             }}
           >
             <TabList onChange={handleChange} aria-label="lab API tabs example">
               <Tab
-                icon={<ArticleIcon sx={{ width: "40px", height: "40px" }} />}
+                icon={<ArticleIcon sx={{ width: "30px", height: "30px" }} />}
                 sx={{
-                  marginLeft: "250px",
-                  fontSize: "18px",
-                  fontWeight: "600",
+                  marginLeft: "300px",
+                  fontSize: "15px",
+                  fontWeight: "700",
                 }}
                 label="posts"
                 value="1"
               />
               <Tab
                 sx={{
-                  fontSize: "18px",
-                  fontWeight: "600",
+                  fontSize: "15px",
+                  fontWeight: "700",
                   marginLeft: "30px",
                 }}
                 icon={
                   <BookmarkBorderIcon
                     sx={{
-                      width: "37px",
-                      height: "37px",
+                      width: "35px",
+                      height: "35px",
                     }}
                   />
                 }
@@ -345,15 +370,15 @@ const Profile = () => {
               />
               <Tab
                 sx={{
-                  fontSize: "18px",
-                  fontWeight: "600",
+                  fontSize: "15px",
+                  fontWeight: "700",
                   marginLeft: "30px",
                 }}
                 icon={
                   <PersonIcon
                     sx={{
-                      width: "37px",
-                      height: "37px",
+                      width: "30px",
+                      height: "30px",
                     }}
                   />
                 }
@@ -362,17 +387,17 @@ const Profile = () => {
               />
             </TabList>
           </Box>
-          <TabPanel sx={{ width: "800px", marginLeft: "100px" }} value="1">
+          <TabPanel sx={{ width: "100%" }} value="1">
             <div className="flex gap-[0.6%] items-center flex-wrap">
               {postUser?.map((elem) => {
                 return (
                   <div
                     onClick={() => {
                       handleOpenPost(elem),
-                        setIdx(el.postId),
-                        dispatch(getPostById(elem.postId));
+                        setIdx(elem.postId),
+                        dispatch(getpostById(elem.postId));
                     }}
-                    className="w-[200px] mt-[10px] h-[200px] cursor-pointer bg-[whitesmoke] rounded-lg   "
+                    className="w-[32.8%] mt-[10px] h-[35vh] cursor-pointer bg-[whitesmoke] rounded-lg   "
                   >
                     {elem.images.map((image, index) => (
                       <img
@@ -388,46 +413,39 @@ const Profile = () => {
             </div>
           </TabPanel>
           <TabPanel sx={{ width: "100%" }} value="2">
-            <div>
-              <div className="flex items-center justify-between">
-                <h1 className="text-[20px] font-[500] text-[#3b3b3b]">
-                  Only you can see what you've saved
-                </h1>
-                <Button sx={{ fontSize: "18px" }} variant="text">
-                  <span className="text-[22px]">+</span> New collection
-                </Button>
-              </div>
+            <div className="flex gap-[0.6%] items-center flex-wrap">
               <div
                 onClick={() => handleOpenPost()}
                 className="flex gap-[0.6%] flex-wrap w-[600px] h-[500px] mt-[10px] overflow-auto"
               >
-                {postUser?.map((elem) => {
-                  return elem.postFavourite ? (
-                    <div
-                      onClick={() => handleOpenPost()}
-                      className="w-[200px] mt-[0px] h-[300px] rounded-md"
-                    >
-                      {elem.images.map((image, index) => (
-                        <img
-                          className="w-[100%] h-[100%] rounded-md object-cover"
-                          src={`${import.meta.env.VITE_APP_FILES_URL}/${elem.images[0]
-                            }`}
-                          alt=""
-                        />
-                      ))}
-                    </div>
-                  ) : null;
-                })}
+                {
+                  posts.filter((e) => {
+                    return e.postFavorite
+                  }).map((e) => {
+                    return (
+                      <div className="w-[32.8%] mt-[10px] h-[35vh] cursor-pointer bg-[whitesmoke] rounded-lg   ">
+                        {e.images.map((image, index) => (
+                          <img
+                            className="w-[200px] h-[100%] rounded-md object-cover"
+                            src={`${import.meta.env.VITE_APP_FILES_URL}/${e.images[0]
+                              }`}
+                            alt=""
+                          />
+                        ))}
+                      </div>
+                    )
+                  })
+                }
               </div>
             </div>
           </TabPanel>
-          <TabPanel sx={{ width: "800px", marginLeft:"100px" }} value="3">
+          <TabPanel sx={{ width: "100%" }} value="3">
             <div className="flex gap-[0.6%] items-center flex-wrap">
               {postUser?.map((elem) => {
                 return (
                   <div
                     onClick={() => handleOpenModalProfile(elem)}
-                    className="w-[200px] h-[200px] mt-[10px] bg-[whitesmoke] rounded-md  "
+                    className="w-[32.8%] h-[35vh] mt-[10px] bg-[whitesmoke] rounded-md  "
                   >
                     {elem.images.map((image, index) => (
                       <img
@@ -443,7 +461,6 @@ const Profile = () => {
             </div>
           </TabPanel>
         </TabContext>
-
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
@@ -479,7 +496,6 @@ const Profile = () => {
             </Box>
           </Fade>
         </Modal>
-
 
         <Modal
           aria-labelledby="transition-modal-title"
@@ -524,7 +540,6 @@ const Profile = () => {
                           .includes(search);
                       })
                       .map((e) => {
-                        console.log(e);
                         return (
                           <div className="flex p-[5px] rounded-xl mt-[5px] justify-between items-center bg-[whitesmoke]">
                             <div className="flex p-[5px] gap-[10px] items-center">
@@ -578,7 +593,7 @@ const Profile = () => {
           <Fade in={followingProfile}>
             <Box sx={styleFollowing}>
               <div>
-                <div className="p-[0px]">
+                <div className="pt-[0px]">
                   <div className="flex justify-between items-center">
                     <h1 className="text-[19px] font-[500] text-[#424141]">
                       Following
@@ -606,7 +621,6 @@ const Profile = () => {
                             .includes(search);
                         })
                         .map((e) => {
-                          console.log(e);
                           return (
                             <div className="flex p-[5px] rounded-xl mt-[5px] justify-between items-center bg-[whitesmoke]">
                               <div className="flex p-[5px] gap-[10px] items-center">
@@ -685,54 +699,225 @@ const Profile = () => {
           </Fade>
         </Modal>
 
+        <Modal
+          open={openPost}
+          onClose={handleClosePost}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={stylePost}>
+            <div className="flex">
+              <div className="w-[400px] h-[600px] border-solid border-[1px] ml-[-390px]  border-gray-200 bg-black ">
+                {Byid?.images?.map((el) => {
+                  return (
+                    <img
+                      className="h-[600px] w-[400px] text-center "
+                      src={`${imgUrl}${el}`}
+                      alt=""
+                    />
+                  );
+                })}
+              </div>
+              <div>
+                <nav className="flex justify-between  h-[60px] w-[450px] border-solid border-[1px] border-gray-200 items-center px-[2%]">
+                  <div className="flex items-center gap-[5px]">
+                    <div>
+                      <img
+                        className="w-[40px] h-[40px]"
+                        src={
+                          length == 0
+                            ? "https://tse4.mm.bing.net/th?id=OIP.jixXH_Els1MXBRmKFdMQPAHaHa&pid=Api&P=0&h=220"
+                            : Byid?.images
+                        }
+                        alt=""
+                      />
+                    </div>
+                    <div className="flex flex-col gap-[1px]">
+                      <div className="flex items-center gap-[5px]">
+                        <h1 className="text-[15px] font-[600] text-[#262626] hover:opacity-50 cursor-pointer">
+                          {Byid?.title}
+                        </h1>
+                        <h1>•</h1>
+                        <h1
+                          onClick={handleButtonClick}
+                          className="text-[#0095f6] cursor-pointer text-[15px] hover:text-[#1f4158]"
+                        >
+                          {isFollowing ? "Unfollow" : "Follow"}
+                        </h1>
+                      </div>
+                      <div>
+                        <h1 className="text-[#000000] font-[200] text-[13px]">
+                          {/* {Byid?.content} */}
+                        </h1>
+                      </div>
+                    </div>
+                  </div>
+                  <MoreHorizIcon
+                    className="hover:opacity-50 cursor-pointer"
+                    onClick={() => handleClickOpenDialog()}
+                  />
+                </nav>
+                <div className="h-[380px] flex flex-col gap-[20px] overflow-auto p-[3%]">
+                  {Byid?.comments?.map((el) => {
+                    return (
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-[10px]">
+                          <img
+                            className="w-[30px] h-[30px]"
+                            src={
+                              length == 0
+                                ? "https://tse4.mm.bing.net/th?id=OIP.jixXH_Els1MXBRmKFdMQPAHaHa&pid=Api&P=0&h=220"
+                                : Byid?.images
+                            }
+                            alt=""
+                          />
+                          <div>
+                            <div className="flex gap-[5px]">
+                              <h1 className="font-[600] text-[15px] hover:opacity-50">
+                                {Byid?.title}
+                              </h1>
+                              <h1 className="w-[200px] font-[300]">
+                                {el?.comment}
+                              </h1>
+                            </div>
+                            <div>
+                              <MoreHorizIcon
+                                sx={{ fontSize: "15px" }}
+                                className="hover:opacity-50 cursor-pointer"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <FavoriteBorderIcon
+                            className="hover:opacity-50"
+                            sx={{ cursor: "pointer", fontSize: "15px" }}
+                          ></FavoriteBorderIcon>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <footer className="border-t-[1px]">
+                  <div className="flex mt-[10px] justify-between items-center">
+                    <div className="flex items-center pl-[16px] gap-[10px]">
+                      {Byid?.addLike ? (
+                        <FavoriteIcon
+                          className="hover:opacity-50"
+                          color="error"
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => {
+                            dispatch(addLike(Byid?.postId));
+                          }}
+                        ></FavoriteIcon>
+                      ) : (
+                        <FavoriteBorderIcon
+                          className="hover:opacity-50"
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => dispatch(addLike(Byid?.postId))}
+                        ></FavoriteBorderIcon>
+                      )}
+                      <svg
+                        className="hover:opacity-50 cursor-pointer"
+                        aria-label="Комментировать"
+                        class="x1lliihq x1n2onr6 x5n08af"
+                        fill="currentColor"
+                        height="24"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="24"
+                      >
+                        <title>Комментировать</title>
+                        <path
+                          d="M20.656 17.008a9.993 9.993 0 1 0-3.59 3.615L22 22Z"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                        ></path>
+                      </svg>
+                      <svg
+                        className="hover:opacity-50 cursor-pointer"
+                        aria-label="Поделиться публикацией"
+                        class="x1lliihq x1n2onr6 x5n08af"
+                        fill="currentColor"
+                        height="24"
+                        role="img"
+                        viewBox="0 0 24 24"
+                        width="24"
+                      >
+                        <title>Поделиться публикацией</title>
+                        <line
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          x1="22"
+                          x2="9.218"
+                          y1="3"
+                          y2="10.083"
+                        ></line>
+                        <polygon
+                          fill="none"
+                          points="11.698 20.334 22 3.001 2 3.001 9.218 10.084 11.698 20.334"
+                          stroke="currentColor"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                        ></polygon>
+                      </svg>
+                    </div>
+                    <div className="pr-[16px]">
+
+                      <BookmarkIcon
+                        onClick={handleBookmarkClick}
+                        style={{
+                          cursor: "pointer",
+                          color: isSaved ? "black" : "gray",
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="py-[10px]">
+                    <h1 className="pl-[16px] text-[#000000] font-[700] text-[17px]">
+                      {Byid?.postLikeCount} <span>likes</span>
+                    </h1>
+                    <h1 className="pl-[16px] text-[#737373] font-[300] text-[12px]">
+                      {formattedDate}
+                    </h1>
+                    <p></p>
+                  </div>
+                  <div className="flex gap-2 py-[10px] items-center border-t pl-[16px]">
+                    <SentimentSatisfiedAltIcon className="hover:opacity-50" />
+                    <input
+                      onChange={(e) => dispatch(addComment(e.target.value))}
+                      className="w-[330px] outline-none h-[40px]"
+                      type="text"
+                      value={comments}
+                      placeholder="Add Comments..."
+                    />
+                    <button
+                      onClick={() => {
+                        dispatch(
+                          addComment({
+                            comment: comments,
+                            postId: Byid?.postId,
+                          })
+                        );
+                        dispatch(addComment(""));
+                      }}
+                      className="text-blue-600 text-[17px] font-[700]"
+                    >
+                      Post
+                    </button>
+                  </div>
+                </footer>
+              </div>
+            </div>
+          </Box>
+        </Modal>
       </div>
     </div>
   );
 };
-
 export default Profile;
-
-
-
-{/* <Box sx={{ width: "100%", mt: "50px", ml: "-50px" }}>
-        <Box sx={{ borderTop: 1, borderColor: "divider", pl: "50px" }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="basic tabs example"
-          >
-            <Tab label="Item One" {...a11yProps(0)} />
-            <Tab label="Item Two" {...a11yProps(1)} />
-            <Tab label="Item Three" {...a11yProps(2)} />
-          </Tabs>
-        </Box>
-        <CustomTabPanel value={value} index={0}>
-          <div className="text-center">
-            <img className="m-auto" src={img9} alt="" />
-            <h1 className="font-bold mt-[10px]">Share Photos</h1>
-            <p className="text-[gray] text-[15px] mb-[15px]">
-              When you share photos, they will appear on your profile{" "}
-            </p>
-            <h1 className="font-bold text-[#3B82F6]">Share tou first photo</h1>
-          </div>
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          <div className="text-center">
-            <img className="m-auto" src={img10} alt="" />
-            <h1 className="font-bold mt-[10px]">You saves</h1>
-            <p className="text-[gray] text-[15px] mb-[15px]">
-              Only you can see what you've saved{" "}
-            </p>
-            <h1 className="font-bold text-[#3B82F6]">+ New collection</h1>
-          </div>
-        </CustomTabPanel>
-        <CustomTabPanel value={value} index={2}>
-          <div className="text-center">
-            <img className="m-auto" src={img11} alt="" />
-            <h1 className="font-bold mt-[10px]">You have not tagged</h1>
-            <p className="text-[gray] text-[15px] mb-[15px]">
-              Here show the photos and videos in which you have been tagged{" "}
-            </p>
-          </div>
-        </CustomTabPanel>
-      </Box> */}
