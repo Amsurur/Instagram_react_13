@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { userProf } from "../../reducers/userProfile/UserProfile";
+import {
+  getusers,
+  subscribeer,
+  userProf,
+} from "../../reducers/userProfile/UserProfile";
 import { useParams } from "react-router";
 
 import img8 from "../../assets/images/pic6.png";
@@ -211,6 +215,10 @@ const UserProfile = () => {
     dispatch(userProf(id));
   }, [dispatch, id]);
 
+  const users = useSelector((state, action) => state.userprofil.users);
+  useEffect(() => {
+    dispatch(getusers());
+  }, [dispatch]);
   return (
     <div>
       <div className="flex ml-[-100px] justify-between items-center">
@@ -219,7 +227,7 @@ const UserProfile = () => {
             onClick={() => handleOpenEditImageProfile()}
             className="w-[140px] rounded-full cursor-pointer  h-[140px] object-cover"
             src={
-              data.image !== ""
+              data?.image !== ""
                 ? `${import.meta.env.VITE_APP_FILES_URL}${data?.image}`
                 : "data:image/jpeg;base64,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"
 
@@ -236,9 +244,20 @@ const UserProfile = () => {
               </h1>
             </div>
             <div className="flex items-center gap-[20px] h-[50px]">
-              <button className="w-[120px]  text-[16px] h-[40px] bg-[whitesmoke] rounded-xl font-sans font-[700]">
-                Подписаться
-              </button>
+              {users?.map((el) => {
+                if (el.userName == data?.userName) {
+                  return (
+                    <>
+                      <button
+                        onClick={() => dispatch(subscribeer(el.id))}
+                        className="w-[120px]  text-[16px] h-[40px] bg-[whitesmoke] rounded-xl font-sans font-[700]"
+                      >
+                        Подписаться
+                      </button>
+                    </>
+                  );
+                }
+              })}
 
               <button className="w-[120px] text-[16px] h-[40px] bg-[whitesmoke] rounded-xl font-sans font-[700]">
                 Cообщения
@@ -252,7 +271,7 @@ const UserProfile = () => {
             <div className="flex w-[32%]  hover:bg-[whitesmoke] hover:duration-700 cursor-pointer  text-center p-[5px] rounded-xl">
               <h1 className="text-[20px] text-[gray] text-center font-sans">
                 <span className="text-[20px] font-[700] text-[black] pr-[5px] pl-[10px]">
-                  {data.postCount}
+                  {data?.postCount}
                 </span>
                 posts
               </h1>
@@ -263,7 +282,7 @@ const UserProfile = () => {
             >
               <h1 className="text-[20px] text-[gray] text-center font-sans ">
                 <span className="text-[20px] font-[700] text-[black] pr-[5px]">
-                  {data.subscribersCount}
+                  {data?.subscribersCount}
                 </span>
                 follower
               </h1>
@@ -274,7 +293,7 @@ const UserProfile = () => {
             >
               <h1 className="text-[20px] text-[gray] font-sans ml-[15px]">
                 <span className="text-[20px] font-[700] text-[black] pr-[5px]">
-                  {data.subscriptionsCount}
+                  {data?.subscriptionsCount}
                 </span>
                 following
               </h1>
@@ -282,7 +301,7 @@ const UserProfile = () => {
           </div>
           <div className="w-[70%] mt-[20px] mb-[15px]">
             <h1 className="text-[19px] font-[700]  text-[#323131] font-sans">
-              {data.fullName}
+              {data?.fullName}
             </h1>
           </div>
         </div>
@@ -351,7 +370,7 @@ const UserProfile = () => {
               />
             </TabList>
           </Box>
-          <TabPanel sx={{ width: "100%", marginLeft: "100px" }} value="1">
+          <TabPanel sx={{ width: "800px" }} value="1">
             <div className="flex gap-[0.6%] items-center flex-wrap">
               {postUser?.map((elem) => {
                 return (
@@ -361,14 +380,13 @@ const UserProfile = () => {
                         setIdx(el.postId),
                         dispatch(getPostById(elem.postId));
                     }}
-                    className="w-[200px] mt-[10px] h-[200px] cursor-pointer bg-[whitesmoke] rounded-lg   "
+                    className="w-[230px] mt-[10px] h-[230px] cursor-pointer m-auto bg-[whitesmoke] rounded-lg   "
                   >
-                    {elem.images.map((image, index) => (
-                      
+                    {elem?.images?.map((image, index) => (
                       <img
                         className="w-[100%] h-[100%] rounded-md object-cover"
                         src={`${import.meta.env.VITE_APP_FILES_URL}/${
-                          elem.images[0]
+                          elem?.images[0]
                         }`}
                         alt=""
                       />
@@ -398,7 +416,7 @@ const UserProfile = () => {
                       onClick={() => handleOpenPost()}
                       className="w-[200px] mt-[0px] h-[300px] rounded-md"
                     >
-                      {elem.images.map((image, index) => (
+                      {elem?.images?.map((image, index) => (
                         <img
                           className="w-[100%] h-[100%] rounded-md object-cover"
                           src={`${import.meta.env.VITE_APP_FILES_URL}/${
@@ -413,15 +431,15 @@ const UserProfile = () => {
               </div>
             </div>
           </TabPanel>
-          <TabPanel sx={{ width: "100%", marginLeft: "100px" }} value="3">
+          <TabPanel sx={{ width: "800px" }} value="3">
             <div className="flex gap-[0.6%] items-center flex-wrap">
               {postUser?.map((elem) => {
                 return (
                   <div
                     onClick={() => handleOpenModalProfile(elem)}
-                    className="w-[200px] h-[200px] mt-[10px] bg-[whitesmoke] rounded-md  "
+                    className="w-[230px] h-[230px] mt-[10px]   m-auto bg-[whitesmoke] rounded-md  "
                   >
-                    {elem.images.map((image, index) => (
+                    {elem?.images?.map((image, index) => (
                       <img
                         className="w-[100%] h-[100%] rounded-md object-cover"
                         src={`${import.meta.env.VITE_APP_FILES_URL}/${
