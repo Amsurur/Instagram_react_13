@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { GetPostByUser, getFollowers, getFollowings, getProfileById } from '../../api/profile/profile';
+import { GetPostByUser, getFollowers, getFollowings, getPosts, getProfileById } from '../../api/profile/profile';
 
 
 export const profile = createSlice({
@@ -9,7 +9,8 @@ export const profile = createSlice({
         editUserById: {},
         postUser: [],
         followingsUser: [],
-        followersUser: []
+        followersUser: [],
+        posts: []
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -30,6 +31,9 @@ export const profile = createSlice({
         builder.addCase(getFollowers.fulfilled, (state, action) => {
             state.followersUser = action.payload;
             state.isLoading = false;
+        });
+        builder.addCase(getPosts.fulfilled, (state, action) => {
+            state.posts = action.payload
         });
     },
 })

@@ -25,6 +25,8 @@ const EditProfile = () => {
                 gender: 1,
                 phoneNumber: "928347",
                 email: "user@example.com",
+                image: editImage,
+
             })
         );
         navigate("/basic/profile")
@@ -42,11 +44,11 @@ const EditProfile = () => {
                     <h1 className="text-[23px] font-[700] font-sans text-[blue]">Profile </h1>
                     <h1 className="text-[22px] font-[700] font-sans">Edit profile</h1>
                 </div>
-                <div className="p-[20px] rounded-xl w-[800px] mt-[10px] bg-[whitesmoke] flex justify-between items-center">
+                <div className="p-[20px] rounded-xl w-[700px] mt-[10px] bg-[whitesmoke] flex justify-between items-center">
                     <div className="flex w-[40%] items-center">
-                        <div className="w-[50%] h-[100px]">
+                        <div className="w-[50%] h-[110px]">
                             <img
-                                className="w-[70%] rounded-full  h-[12.5vh] object-cover"
+                                className="w-[100px] rounded-full  h-[100px] object-cover"
                                 src={
                                     userProfile.image !== 0
                                         ? `${import.meta.env.VITE_APP_FILES_URL}/${userProfile.image
@@ -108,8 +110,8 @@ const EditProfile = () => {
                     name=""
                     id=""
                 >
-                    <option value="">{userProfile.gender}</option>
-                    <option value="">{userProfile.gender}</option>
+                    <option value="MALE">MALE</option>
+                    <option value="FEMALE">FEMALE</option>
                 </select>
             </div>
             <div>
