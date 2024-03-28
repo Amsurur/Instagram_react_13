@@ -24,7 +24,6 @@ export const getComment = createAsyncThunk("reels/getComment", async () => {
 export const getReels = createAsyncThunk("reels/getReels", async () => {
   try {
     const { data } = await axiosRequest.get("Post/get-reels?PageSize=2000");
-
     return data.data;
   } catch (error) {
     console.log(error);
@@ -70,6 +69,7 @@ export const addPostFavorite = createAsyncThunk(
 export const postFolow = createAsyncThunk(
   "reels/postFolow",
   async (id, { dispatch }) => {
+    // console.log(id);
     try {
       let { data } = await axiosRequest.post(
         `FollowingRelationShip/add-following-relation-ship?followingUserId=${id}`
@@ -83,7 +83,7 @@ export const postFolow = createAsyncThunk(
 
 export const likeReel = createAsyncThunk(
   "reels/likeReel",
-  async (Id, dispatch) => {
+  async (Id, { dispatch }) => {
     try {
       const { data } = await axiosRequest.post(`Post/like-post?postId=${Id}`);
       dispatch(getReels());
@@ -92,15 +92,18 @@ export const likeReel = createAsyncThunk(
     }
   }
 );
-export const AddComent = createAsyncThunk("reels/addComent", async (user,{dispatch}) => {
-  let obj = {
-    comment: user.com,
-    postId: user.id,
-  };
-  try {
-    const { data } = await axiosRequest.post(`Post/add-comment`, obj);
-    dispatch(getPostById(user.id));
-  } catch (error) {
-    console.log(error);
+export const AddComent = createAsyncThunk(
+  "reels/addComent",
+  async (user, { dispatch }) => {
+    let obj = {
+      comment: user.com,
+      postId: user.id,
+    };
+    try {
+      const { data } = await axiosRequest.post(`Post/add-comment`, obj);
+      dispatch(getPostById(user.id));
+    } catch (error) {
+      console.log(error);
+    }
   }
-});
+);
