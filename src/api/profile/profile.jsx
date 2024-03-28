@@ -15,6 +15,35 @@ export const getProfileById = createAsyncThunk(
   }
 );
 
+export const getPosts = createAsyncThunk(
+  "profile/getPosts",
+  async function () {
+    try {
+      let { data } = await axiosRequest.get(
+        `Post/get-posts?PageSize=1000`
+      );
+      return data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+
+export const getFollowerPost = createAsyncThunk(
+  "profile/getFollowerPost",
+  async function (id) {
+    try {
+      const { data } = await axiosRequest.post(
+        'Post/add-post-favorite'
+      )
+      return data.data
+    } catch (error) {
+      console.error(error);
+    }
+  }
+)
+
 export const GetPostByUser = createAsyncThunk(
   "profile/GetPostByUser",
   async function (id) {
@@ -59,13 +88,11 @@ export const getFollowers = createAsyncThunk(
 export const putProfile = createAsyncThunk(
   "profile/putProfile",
   async function (user) {
-    console.log(user);
     try {
       let { data } = await axiosRequest.put(
         `UserProfile/update-user-profile`,
         user
       );
-      console.log(data);
       return data.data;
     } catch (error) {
       console.log(error);

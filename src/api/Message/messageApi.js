@@ -50,7 +50,7 @@ export const deleteChat = createAsyncThunk(
   async (id, { dispatch }) => {
     try {
       let { data } = await axiosRequest.delete(`Chat/delete-chat?chatId=${id}`);
-      dispatch(getUser());
+      dispatch(Data());
     } catch (error) {
       console.error(error);
     }

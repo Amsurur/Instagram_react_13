@@ -133,6 +133,9 @@ const Explore = () => {
           Отмена
         </button>
       </Dialog>
+
+
+
       <div className="grid grid-cols-3 mt-[40px]">
         {data.map((el, index) => (
           <div key={index} className="relative">
@@ -163,6 +166,8 @@ const Explore = () => {
           </div>
         ))}
       </div>
+
+      
 
       <Dialog
         maxWidth="xl"
