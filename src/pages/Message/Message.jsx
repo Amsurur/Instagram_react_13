@@ -52,6 +52,7 @@ import { axiosRequest } from "../../utils/axiosRequest";
 import { blue, green } from "@mui/material/colors";
 import Webcam from "react-webcam";
 import { AudioRecorder } from "react-audio-voice-recorder";
+import { Link } from "react-router-dom";
 
 const addAudioElement = (blob) => {
   const url = URL.createObjectURL(blob);
@@ -177,6 +178,7 @@ const Message = () => {
   const [name2, setName2] = useState(false);
   const [audio, setAudio] = useState(null);
   const [a, setA] = useState("");
+  const [iid, setIid] = useState("");
 
   let data = useSelector((state1) => state1.message.data);
   let chatdata = useSelector((state1) => state1.message.data1);
@@ -285,6 +287,18 @@ const Message = () => {
     dispatch(chatData(id));
     dispatch(Data());
   }, [id, dispatch]);
+  const [minutesAgo, setMinutesAgo] = useState(0);
+
+  useEffect(() => {
+    if (chattext && chattext.length > 0) {
+      const lastMessage = chattext[chattext.length - 1];
+      const sentTime = new Date(lastMessage.sendMassageDate);
+      const currentTime = new Date();
+      const difference = currentTime.getTime() - sentTime.getTime();
+      const minutes = Math.floor(difference / (1000 * 60));
+      setMinutesAgo(minutes);
+    }
+  }, [chattext]);
 
   return (
     <div className="overflow-y-none">
@@ -329,6 +343,7 @@ const Message = () => {
                       setName(e.receiveUser.userName),
                       setAvatar1(e.receiveUser.userPhoto);
                     setName2(e.receiveUser.fullname);
+                    setIid(e.receiveUser.userId);
                   }}
                   className="hover:bg-gray-100  rounded-md pt-[5%] pl-[5%]  flex pb-5 cursor-pointer"
                   key={e.chatId}
@@ -405,7 +420,11 @@ const Message = () => {
 
                         <p className="text-[16px] font-[600]"></p>
                         <p className="text-[#A7B1BE] text-[14px] font-mono">
-                          Active minute ago
+                          {minutesAgo === 0 ? (
+                            <p>Just now</p>
+                          ) : (
+                            <p>{minutesAgo} minute(s) ago</p>
+                          )}
                         </p>
                       </div>
                     </div>
@@ -428,6 +447,7 @@ const Message = () => {
               </div>
               <div className="overflow-y-scroll h-[80vh]">
                 {chattext?.map((e) => {
+                  console.log(chattext);
                   if (e.userId == getToken().sid) {
                     return (
                       <div className="w-[100%] flex text-start justify-end items-center">
@@ -592,7 +612,7 @@ const Message = () => {
                         onClick={(e) => sendMessage(e)}
                         className="text-[#15bdff] flex items-center ml-[15%] font-mono font-[700]"
                       >
-                        Send a message
+                        Send
                         <SendIcon sx={{ paddingLeft: 1, fontSize: 30 }} />
                       </button>
                     </div>
@@ -776,7 +796,7 @@ const Message = () => {
                 ),
                   handleClose1(false);
               }}
-              className="text-red-500  flex text-[18px] mt-[4%] pt-[5px] border-t"
+              className="text-red-500 cursor-pointer  flex text-[18px] mt-[4%] pt-[5px] border-t"
             >
               Delete Message
             </p>
@@ -1263,7 +1283,11 @@ const Message = () => {
                       className="w-[80px] h-[80px] rounded-[50%]"
                     />
                     <div className="ml-[2%]">
-                      <p className="text-[24px] font-[600] pt-[20px]">{name}</p>
+                      <Link to={`/basic/user/${iid}`}>
+                        <p className="text-[24px] font-[600] pt-[20px]">
+                          {name}
+                        </p>
+                      </Link>
 
                       <p className="text-[16px] font-[600]"></p>
                     </div>

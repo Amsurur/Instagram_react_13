@@ -25,6 +25,7 @@ export const counterSlice = createSlice({
     });
     builder.addCase(chatData.fulfilled, (state, action) => {
       state.data2 = action.payload;
+      
     });
   },
 });
