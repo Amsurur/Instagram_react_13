@@ -3,7 +3,7 @@
   border-right: 2px solid #3B82F6;
   color: #3B82F6;
 } */
-  
+
 .searchModal {
   box-shadow: 0px 0px 6px gray;
   border-top-right-radius: 16px;
@@ -57,10 +57,8 @@
   cursor: pointer;
 }
 
-
-
 .custom-file-input-button {
-  background-color: #3B82F6;
+  background-color: #3b82f6;
   /* Green */
   border: none;
   color: white;
@@ -71,17 +69,15 @@
   font-size: 16px;
   cursor: pointer;
   border-radius: 10px;
-
 }
 
 .custom-file-input-button:hover {
-  background-color: #3B82F6;
+  background-color: #3b82f6;
 }
 
 .custom-file-input-button:active {
-  background-color: #3B82F6;
+  background-color: #3b82f6;
 }
-
 
 #app {
   height: 100%;
@@ -93,7 +89,7 @@ body {
 }
 
 body {
-  background: #eee;
+  background: white !important;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
   font-size: 14px;
   color: #000;
@@ -104,14 +100,12 @@ body {
 .swiper {
   width: 100%;
   height: 100%;
-
 }
 
 .swiper-slide {
   text-align: center;
   font-size: 18px;
-  background: #fff;
-
+  /* background: #fff; */
 
   /* Center slide text vertically */
   display: flex;

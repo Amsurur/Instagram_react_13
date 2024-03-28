@@ -13,7 +13,6 @@ export const counterSlice = createSlice({
     data1: [],
     data2: [],
     data3: [],
-
   },
   reducers: {},
 
@@ -27,7 +26,6 @@ export const counterSlice = createSlice({
     builder.addCase(chatData.fulfilled, (state, action) => {
       state.data2 = action.payload;
     });
-
   },
 });
 
