@@ -88,16 +88,24 @@ const Reels = () => {
         <div className="w-[600px] h-[660px] m-[auto]  overflow-y-auto p-[20px] overflow-x-hidden">
           {data?.map((elem) => {
             return (
-              <div className="w-[90%] m-[auto] mt-[20px] ">
-                <video controls autoPlay muted loop>
-                  <source
-                    type="video/mp4"
-                    className="w-[80%] relative"
-                    src={`${imageApi}/${elem.images}`}
-                    alt=""
-                    onError={(error) => console.log(error)}
-                  />
-                </video>
+              <div className="w-[90%]  m-[auto]   object-cover   items-center  ">
+                <div className="bg-black ">
+                  <video
+                    controls
+                    autoPlay
+                    muted
+                    loop
+                    className="pt-[25vh]   w-[100%] h-[800px]"
+                  >
+                    <source
+                      type="video/mp4"
+                      className="w-[80%] relative "
+                      src={`${imageApi}/${elem.images}`}
+                      alt=""
+                      onError={(error) => console.log(error)}
+                    />
+                  </video>
+                </div>
 
                 <div className="relative bottom-[420px] z-1 left-[420px]">
                   {elem?.postLike ? (
@@ -291,11 +299,11 @@ const Reels = () => {
                     );
                   })}
                 </div>
-                <div className="bg--400 h-[50px] w-[90%] m-auto border-t-2 flex items-center justify-between">
+                <div className="h-[60px] w-[98%] m-auto border-t-2 flex items-center justify-between">
                   <input
                     type="text"
                     placeholder="Add a comment..."
-                    className="h-[30px] outline-none   text-[17px]  w-[180px]"
+                    className="h-[40px] outline-none   text-[17px]  w-[180px]"
                     value={commentInput}
                     onChange={(ev) => setCommentInput(ev.target.value)}
                     style={{ position: "fixed", bottom: "27%" }}
