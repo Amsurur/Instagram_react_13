@@ -31,12 +31,16 @@ import "stories-react/dist/index.css";
 
 import "./style.css";
 
+
+
 // import required modules
 import { Pagination } from "swiper/modules";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addComment,
   addFavorite,
+  ckeckFolow,
+  deleteFolow,
   getById,
   getData,
   getStories,
@@ -79,6 +83,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(getById());
   }, [dispatch]);
+  // console.log("------------>>>>>", getByIdData);
 
   let getStoriesData = useSelector((state) => state.Home.stories);
   useEffect(() => {
@@ -95,6 +100,12 @@ const Home = () => {
   useEffect(() => {
     dispatch(getYourProfile());
   }, [dispatch]);
+
+  let checkFollowData = useSelector((state) => state.Home.checkFollowData);
+  useEffect(() => {
+    dispatch(ckeckFolow());
+  }, [dispatch]);
+
   let loading = useSelector((state) => state.Home.loading);
   let panding = [1, 2, 3, 4, 5, 6];
   let loadingData2 = useSelector((state) => state.Home.loadingData2);
@@ -165,8 +176,9 @@ const Home = () => {
 
               {getStoriesData?.stories
                 ?.filter((e) => {
-                  return e.fileName != null;
+                  return e?.fileName && e.userId != getToken().id;
                 })
+
                 ?.map((el) => {
                   // console.log(el);
                   return (
@@ -383,11 +395,11 @@ const Home = () => {
                         </div>
                         <div
                           onClick={() => {
-                            dispatch(addFavorite(getByIdData?.postId));
+                            dispatch(addFavorite(el.postId));
                           }}
                           className="w-[35px] h-[35px]  flex items-center justify-center"
                         >
-                          {getByIdData?.postFavorite ? (
+                          {el.postFavorite ? (
                             <BookmarkOutlinedIcon sx={{ fontSize: 20 }} />
                           ) : (
                             <BookmarkBorderOutlinedIcon sx={{ fontSize: 20 }} />
@@ -554,7 +566,7 @@ const Home = () => {
             <>
               {data2
                 ?.filter((e) => {
-                  return !e.subscriptions && e.id != myId;
+                  return e.id != myId;
                 })
                 ?.slice(0, 6)
                 ?.map((el) => {
@@ -582,14 +594,36 @@ const Home = () => {
                         <h1>{el.userName}</h1>
                         <p className="text-[gray]">{el.fullName}</p>
                       </div>
-                      <h1
-                        onClick={() => {
-                          dispatch(postFolow(el.id));
-                        }}
-                        className="text-[#3B82F6] font-bold cursor-pointer "
-                      >
-                        Follow
-                      </h1>
+
+                      {el.subscriptions ? (
+                        <>
+                          {checkFollowData?.map((item) => {
+                            if (item.userShortInfo.userId == el.id) {
+                              return (
+                                <>
+                                  <h1
+                                    onClick={() => {
+                                      dispatch(deleteFolow(item.id));
+                                    }}
+                                    className="text-[#3B82F6] font-bold cursor-pointer border p-[3px_15px] rounded border-blue-300 "
+                                  >
+                                    Unfollow
+                                  </h1>
+                                </>
+                              );
+                            }
+                          })}
+                        </>
+                      ) : (
+                        <h1
+                          onClick={() => {
+                            dispatch(postFolow(el.id));
+                          }}
+                          className="bg-[#3B82F6] text-white rounded p-[3px_23px]  font-bold cursor-pointer "
+                        >
+                          Follow
+                        </h1>
+                      )}
                     </div>
                   );
                 })}
@@ -701,18 +735,7 @@ const Home = () => {
           aria-describedby="alert-dialog-description"
           // style={{ maxWidth: "none" }}
         >
-          <div className="w-[97%] flex justify-between m-auto items-center h-[50px] absolute">
-            <h1></h1>
-            <h1
-              onClick={() => {
-                setCommetModal(false);
-              }}
-              className="font-bold text-[15px] cursor-pointer "
-            >
-              X
-            </h1>
-          </div>
-          <div className="w-[1000px] h-[500px] bg-white flex items-center justify-between">
+          <div className="w-[1000px] h-[600px] bg-white flex items-center justify-between">
             <div className="w-[50%] h-full">
               {getByIdData && getByIdData?.images[0].at(-1) == "4" ? (
                 <video
@@ -736,7 +759,33 @@ const Home = () => {
               )}
             </div>
             <div className="w-[50%] h-full">
-              <div className="h-[380px] overflow-x-hidden">
+              <div className="h-[80px] w-[95%] m-auto bg--500 border-b-[1px] flex items-center ">
+                <div className="w-[37px] h-[37px] rounded-full border ">
+                  {data2?.map((item) => {
+                    if (getByIdData?.userId == item.id) {
+                      return (
+                        <>
+                          <img
+                            src={`${img}${item.avatar}`}
+                            className="w-full h-full rounded-full"
+                            alt=""
+                          />
+                        </>
+                      );
+                    }
+                  })}
+                </div>
+                {data2?.map((item) => {
+                  if (getByIdData?.userId == item.id) {
+                    return (
+                      <>
+                        <h1 className="ml-3">{item.userName}</h1>
+                      </>
+                    );
+                  }
+                })}
+              </div>
+              <div className="h-[380px] bg--500 overflow-x-hidden">
                 {getByIdData?.comments?.map((el) => {
                   return (
                     <div className="w-[95%] m-auto h-[50px] flex items-center">
@@ -782,7 +831,7 @@ const Home = () => {
                   );
                 })}
               </div>
-              <div className="w-[95%] m-auto h-[120px] ">
+              <div className="w-[95%] m-auto h-[120px] bg--700 ">
                 <div className="h-[45px]  flex justify-between items-center">
                   <div className="w-[90px] h-[35px]  flex justify-between items-center">
                     <div

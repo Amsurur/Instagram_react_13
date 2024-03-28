@@ -6,6 +6,7 @@ import searchSlice from "../api/search/searchSlice";
 import profile from "../reducers/Profile/Profile";
 import Explore from "../reducers/explore/Explore";
 import Home from "../reducers/Home/Home";
+import UserProfile from "../reducers/userProfile/UserProfile";
 
 
 export const store = configureStore({
@@ -16,9 +17,11 @@ export const store = configureStore({
     post: postSlice,
     search:searchSlice,
     Home: Home,
+    userprofil:UserProfile,
     profile,
     explore: Explore,
   }
 });
+
 
 
